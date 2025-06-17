@@ -4,6 +4,19 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Environment variables (WAŻNE!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Keys and secrets
+keys/
+secrets/
+*.key
+*.pem
+
 # IDE
 .vscode/
 .idea/
@@ -21,8 +34,9 @@ ehthumbs.db
 Thumbs.db
 
 # Logs
-logs
+logs/
 *.log
+crash.log
 
 # Runtime data
 pids
@@ -33,16 +47,10 @@ pids
 # Coverage directory used by tools like istanbul
 coverage/
 
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
 # Temporary files
 tmp/
 temp/
+*.tmp
 
 # Build outputs
 dist/
@@ -55,4 +63,17 @@ wellness_backup_*/sensitive/
 # Keep important files
 !wellness_backup_*/README_BACKUP.md
 !wellness_backup_*/CHANGELOG.md
-!wellness_backup_*/INSTALL.md 
+!wellness_backup_*/INSTALL.md
+
+# Backup sensitive data
+backup/passwords.txt
+backup/keys/
+
+# Stripe keys (if accidentally committed)
+stripe_keys.txt
+payment_config.json
+
+# Database
+*.db
+*.sqlite
+database.json 

@@ -1,5 +1,7 @@
 # 🌿 SezonoweDobro - Aplikacja TCM Wellness
 
+⚠️ **UWAGA BEZPIECZEŃSTWA**: Ten kod zawiera DEMO dane! Zobacz [SECURITY.md](SECURITY.md) przed użyciem produkcyjnym.
+
 ![SezonoweDobro](https://img.shields.io/badge/Status-Production_Ready-green)
 ![PWA](https://img.shields.io/badge/PWA-Enabled-blue)
 ![Stripe](https://img.shields.io/badge/Payments-Stripe-purple)
