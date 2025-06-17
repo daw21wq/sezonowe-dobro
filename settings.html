@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ustawienia - Smaki Sezonu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #2d5a2d 0%, #1a4d1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .main-container {
+            max-width: 414px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, #2d5a2d 0%, #1a4d1a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+        }
+        .back-button {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #4CAF50, #66BB6A);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 50;
+            text-decoration: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .back-button:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #66BB6A, #81C784);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        .settings-section {
+            background: rgba(76, 175, 80, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .settings-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        .settings-section:hover::before {
+            left: 100%;
+        }
+        .settings-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+        .admin-only {
+            display: none;
+        }
+        .admin-only.visible {
+            display: block;
+        }
+        .form-input {
+            background-color: rgba(76, 175, 80, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: white !important;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        .form-input::placeholder { color: rgba(255, 255, 255, 0.7) !important; }
+        .form-input:focus {
+            background-color: rgba(76, 175, 80, 0.2) !important;
+            border-color: #4CAF50 !important;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3) !important;
+            outline: none !important;
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-online { background-color: #10B981; }
+        .status-offline { background-color: #EF4444; }
+        .status-testing { background-color: #F59E0B; }
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #4CAF50, #66BB6A);
+        }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+        /* Floating Background Animation */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+            font-size: 24px;
+            color: #4CAF50;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 10%;
+            animation-delay: -7s;
+        }
+
+        .floating-element:nth-child(3) {
+            top: 40%;
+            left: 30%;
+            animation-delay: -14s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(20px) rotate(240deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+        .ai-model-card {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .ai-model-card:hover {
+            background: rgba(76, 175, 80, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        .ai-model-card.selected {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Elements -->
+    <div class="background-animation">
+        <div class="floating-element">🌿</div>
+        <div class="floating-element">🍃</div>
+        <div class="floating-element">🌱</div>
+    </div>
+
+    <div class="main-container">
+        <button onclick="goBackToMainApp()" class="back-button">
+            <i class="fas fa-arrow-left text-lg"></i>
+        </button>
+
+        <main class="pt-20">
+            <div class="text-center mb-8 fade-in-up">
+                <div class="header-gradient" style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(56, 142, 60, 0.2)); border-bottom: 1px solid rgba(255, 255, 255, 0.2); position: relative; padding: 30px 20px; border-radius: 20px; margin-bottom: 20px;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #4CAF50, #66BB6A, #81C784, #A5D6A7, #C8E6C9); animation: seasonalGlow 4s ease-in-out infinite;"></div>
+                    <h1 class="text-3xl font-bold text-white" style="text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">⚙️ Ustawienia</h1>
+                    <p class="text-white/90 mt-2">Personalizuj swoje doświadczenie wellness</p>
+                </div>
+            </div>
+
+            <style>
+                @keyframes seasonalGlow {
+                    0%, 100% { opacity: 0.8; transform: translateX(-100%); }
+                    50% { opacity: 1; transform: translateX(100%); }
+                }
+            </style>
+
+            <!-- Podstawowe ustawienia - dla wszystkich -->
+            <div class="settings-section fade-in-up" style="animation-delay: 0.1s;">
+                <h2 class="text-xl font-bold text-white flex items-center mb-4">
+                    <i class="fas fa-user mr-3 text-blue-400"></i>
+                    Profil użytkownika
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-white mb-2">Imię</label>
+                        <input type="text" id="user-name" placeholder="Twoje imię..." 
+                               class="form-input w-full p-3 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-white mb-2">Email</label>
+                        <input type="email" id="user-email" placeholder="twoj@email.com" 
+                               class="form-input w-full p-3 rounded-lg">
+                    </div>
+                    <button id="save-profile" class="w-full text-white font-bold py-3 px-4 rounded-lg transition-all" style="background: linear-gradient(135deg, #4CAF50, #66BB6A); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='linear-gradient(135deg, #66BB6A, #81C784)'; this.style.boxShadow='0 6px 20px rgba(0, 0, 0, 0.3)'" onmouseout="this.style.background='linear-gradient(135deg, #4CAF50, #66BB6A)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.2)'">
+                        <i class="fas fa-save mr-2"></i>Zapisz profil
+                    </button>
+                </div>
+            </div>
+
+            <!-- Preferencje - dla wszystkich -->
+            <div class="settings-section fade-in-up" style="animation-delay: 0.2s;">
+                <h2 class="text-xl font-bold text-white flex items-center mb-4">
+                    <i class="fas fa-sliders-h mr-3 text-green-400"></i>
+                    Preferencje
+                </h2>
+                
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                        <span class="text-white">
+                            <i class="fas fa-bell mr-2 text-yellow-400"></i>
+                            Powiadomienia
+                        </span>
+                        <div id="notifications-toggle" class="toggle-switch active"></div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                        <span class="text-white">
+                            <i class="fas fa-moon mr-2 text-purple-400"></i>
+                            Tryb ciemny
+                        </span>
+                        <div id="dark-mode-toggle" class="toggle-switch"></div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                        <span class="text-white">
+                            <i class="fas fa-language mr-2 text-orange-400"></i>
+                            Język
+                        </span>
+                        <select id="language-select" class="form-input p-2 rounded">
+                            <option value="pl">Polski</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEKCJA AI - TYLKO DLA ADMINISTRATORÓW -->
+            <div id="ai-section" class="settings-section admin-only fade-in-up" style="animation-delay: 0.3s;">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-white flex items-center">
+                        <i class="fas fa-robot mr-3 text-blue-400"></i>
+                        Konfiguracja AI Asystenta
+                        <span class="text-xs bg-red-500/70 px-2 py-1 rounded-full ml-3">ADMIN</span>
+                    </h2>
+                    <div class="flex items-center">
+                        <span class="status-indicator" id="ai-status-indicator"></span>
+                        <span id="ai-status-text" class="text-sm text-white/80">Sprawdzanie...</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-white mb-2">
+                            <i class="fas fa-key mr-2"></i>Klucz API
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="ai-api-key" placeholder="Wklej tutaj swój klucz API..." 
+                                   class="form-input w-full p-3 pr-12 rounded-lg">
+                            <button id="toggle-api-visibility" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-white/60 mt-1">
+                            Obsługiwane: OpenAI (sk-...), Anthropic (sk-ant-...), Google (AIza...), Cohere
+                        </p>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button id="detect-ai-model" class="flex-1 text-white font-semibold py-3 px-4 rounded-lg transition-all" style="background: linear-gradient(135deg, #4CAF50, #66BB6A); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='linear-gradient(135deg, #66BB6A, #81C784)'; this.style.boxShadow='0 6px 20px rgba(0, 0, 0, 0.3)'" onmouseout="this.style.background='linear-gradient(135deg, #4CAF50, #66BB6A)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.2)'">
+                            <i class="fas fa-search mr-2"></i>Auto-Detect Model
+                        </button>
+                        <button id="test-ai-connection" class="flex-1 text-white font-semibold py-3 px-4 rounded-lg transition-all" style="background: linear-gradient(135deg, #4CAF50, #66BB6A); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='linear-gradient(135deg, #66BB6A, #81C784)'; this.style.boxShadow='0 6px 20px rgba(0, 0, 0, 0.3)'" onmouseout="this.style.background='linear-gradient(135deg, #4CAF50, #66BB6A)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.2)'">
+                            <i class="fas fa-test-tube mr-2"></i>Test Connection
+                        </button>
+                    </div>
+
+                    <!-- Wykryte modele -->
+                    <div id="detected-models" class="hidden">
+                        <h4 class="font-semibold text-white mb-3">Wykryte modele:</h4>
+                        <div id="model-list" class="space-y-2"></div>
+                    </div>
+
+                    <!-- Wybór manualny -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-white mb-2">Provider</label>
+                            <select id="ai-provider" class="form-input w-full p-3 rounded-lg">
+                                <option value="">Wybierz dostawcę AI</option>
+                                <option value="openai">OpenAI (GPT-4, GPT-3.5)</option>
+                                <option value="anthropic">Anthropic (Claude)</option>
+                                <option value="google">Google (Gemini)</option>
+                                <option value="cohere">Cohere</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-white mb-2">Model</label>
+                            <select id="ai-model" class="form-input w-full p-3 rounded-lg">
+                                <option value="">Najpierw wybierz dostawcę</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="save-ai-config" class="w-full text-white font-bold py-3 px-4 rounded-lg transition-all" style="background: linear-gradient(135deg, #4CAF50, #66BB6A); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='linear-gradient(135deg, #66BB6A, #81C784)'; this.style.boxShadow='0 6px 20px rgba(0, 0, 0, 0.3)'" onmouseout="this.style.background='linear-gradient(135deg, #4CAF50, #66BB6A)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.2)'">
+                        <i class="fas fa-save mr-2"></i>Zapisz Konfigurację AI
+                    </button>
+                </div>
+            </div>
+
+            <!-- SEKCJA STRIPE - TYLKO DLA ADMINISTRATORÓW -->
+            <div id="stripe-section" class="settings-section admin-only fade-in-up" style="animation-delay: 0.4s;">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-white flex items-center">
+                        <i class="fab fa-stripe mr-3 text-purple-400"></i>
+                        Konfiguracja Stripe Premium
+                        <span class="text-xs bg-red-500/70 px-2 py-1 rounded-full ml-3">ADMIN</span>
+                    </h2>
+                    <div class="flex items-center">
+                        <span class="status-indicator" id="stripe-status-indicator"></span>
+                        <span id="stripe-status-text" class="text-sm text-white/80">Sprawdzanie...</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-white mb-2">
+                                <i class="fas fa-key mr-2"></i>Publishable Key
+                            </label>
+                            <input type="text" id="stripe-publishable-key" placeholder="pk_test_..." 
+                                   class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-white mb-2">
+                                <i class="fas fa-lock mr-2"></i>Secret Key
+                            </label>
+                            <input type="password" id="stripe-secret-key" placeholder="sk_test_..." 
+                                   class="form-input w-full p-3 rounded-lg">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-white mb-2">
+                                <i class="fas fa-calendar mr-2"></i>Cena miesięczna (PLN)
+                            </label>
+                            <input type="number" id="premium-monthly-price" value="29.99" step="0.01" 
+                                   class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-white mb-2">
+                                <i class="fas fa-calendar-alt mr-2"></i>                            Cena roczna (PLN)
+                            </label>
+                            <input type="number" id="premium-yearly-price" value="299.99" step="0.01" 
+                                   class="form-input w-full p-3 rounded-lg">
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button id="test-stripe-connection" class="flex-1 text-white font-semibold py-3 px-4 rounded-lg transition-all" style="background: linear-gradient(135deg, #FF9800, #FFB74D); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='linear-gradient(135deg, #FFB74D, #FFCC02)'; this.style.boxShadow='0 6px 20px rgba(0, 0, 0, 0.3)'" onmouseout="this.style.background='linear-gradient(135deg, #FF9800, #FFB74D)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.2)'">
+                            <i class="fas fa-test-tube mr-2"></i>Test Stripe
+                        </button>
+                        <button id="save-stripe-config" class="flex-1 text-white font-semibold py-3 px-4 rounded-lg transition-all" style="background: linear-gradient(135deg, #4CAF50, #66BB6A); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='linear-gradient(135deg, #66BB6A, #81C784)'; this.style.boxShadow='0 6px 20px rgba(0, 0, 0, 0.3)'" onmouseout="this.style.background='linear-gradient(135deg, #4CAF50, #66BB6A)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.2)'">
+                            <i class="fas fa-save mr-2"></i>Zapisz Stripe
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KONTROLA DOSTĘPU - TYLKO DLA ADMINISTRATORÓW -->
+            <div id="access-control-section" class="settings-section admin-only fade-in-up" style="animation-delay: 0.5s;">
+                <h2 class="text-xl font-bold text-white flex items-center mb-4">
+                    <i class="fas fa-shield-alt mr-3 text-red-400"></i>
+                    Kontrola Dostępu
+                    <span class="text-xs bg-red-500/70 px-2 py-1 rounded-full ml-3">ADMIN</span>
+                </h2>
+
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                        <span class="text-white">
+                            <i class="fas fa-robot mr-2 text-green-400"></i>
+                            AI Asystent - dostęp kontrolowany
+                        </span>
+                        <div id="ai-access-toggle" class="toggle-switch active"></div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                        <span class="text-white">
+                            <i class="fas fa-crown mr-2 text-yellow-400"></i>
+                            Funkcje Premium - dostęp kontrolowany
+                        </span>
+                        <div id="premium-access-toggle" class="toggle-switch active"></div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                        <span class="text-white">
+                            <i class="fas fa-download mr-2 text-green-400"></i>
+                            Eksport danych - dostęp kontrolowany
+                        </span>
+                        <div id="export-access-toggle" class="toggle-switch active"></div>
+                    </div>
+                </div>
+
+                <button id="save-access-control" class="w-full mt-4 text-white font-bold py-3 px-4 rounded-lg transition-all" style="background: linear-gradient(135deg, #F44336, #E57373); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='linear-gradient(135deg, #E57373, #FFAB91)'; this.style.boxShadow='0 6px 20px rgba(0, 0, 0, 0.3)'" onmouseout="this.style.background='linear-gradient(135deg, #F44336, #E57373)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.2)'">
+                    <i class="fas fa-shield-alt mr-2"></i>Zapisz Kontrolę Dostępu
+                </button>
+            </div>
+
+            <!-- Przycisk ustawienia administratora (dla testów) -->
+            <div class="text-center mt-6">
+                <button id="set-admin" class="text-white font-bold py-2 px-4 rounded-lg text-sm transition-all" style="background: linear-gradient(135deg, #F44336, #E57373); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='linear-gradient(135deg, #E57373, #FFAB91)'; this.style.boxShadow='0 6px 20px rgba(0, 0, 0, 0.3)'" onmouseout="this.style.background='linear-gradient(135deg, #F44336, #E57373)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.2)'">
+                    🔧 Ustaw jako ADMIN (test)
+                </button>
+                <button id="set-user" class="text-white font-bold py-2 px-4 rounded-lg text-sm ml-2 transition-all" style="background: linear-gradient(135deg, #757575, #9E9E9E); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='linear-gradient(135deg, #9E9E9E, #BDBDBD)'; this.style.boxShadow='0 6px 20px rgba(0, 0, 0, 0.3)'" onmouseout="this.style.background='linear-gradient(135deg, #757575, #9E9E9E)'; this.style.boxShadow='0 4px 15px rgba(0, 0, 0, 0.2)'">
+                    👤 Ustaw jako USER (test)
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-6 right-6 bg-green-500 text-white py-3 px-6 rounded-lg shadow-lg z-50 transition-all">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="toast-message">Operacja zakończona pomyślnie!</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Sprawdź czy użytkownik to administrator
+            checkAdminAccess();
+            
+            // Inicjalizuj podstawowe funkcje
+            initializeBasicSettings();
+            
+            // Inicjalizuj funkcje administratora (jeśli jest adminem)
+            initializeAdminFeatures();
+            
+            // Załaduj konfigurację
+            loadAllSettings();
+
+            // AI Models mapping
+            const aiModels = {
+                openai: ['gpt-4', 'gpt-4-turbo', 'gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
+                anthropic: ['claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku', 'claude-2'],
+                google: ['gemini-pro', 'gemini-pro-vision', 'gemini-1.5-pro'],
+                cohere: ['command', 'command-light', 'command-nightly']
+            };
+
+            function checkAdminAccess() {
+                try {
+                    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                    
+                    if (currentUser.role === 'admin') {
+                        // Pokaż sekcje administratora
+                        document.querySelectorAll('.admin-only').forEach(section => {
+                            section.classList.add('visible');
+                        });
+                        console.log('🔐 ADMIN ACCESS: Funkcje administratora aktywne');
+                    } else {
+                        // Ukryj sekcje administratora
+                        document.querySelectorAll('.admin-only').forEach(section => {
+                            section.classList.remove('visible');
+                        });
+                        console.log('👤 USER ACCESS: Widok użytkownika');
+                    }
+                } catch (error) {
+                    console.error('Błąd sprawdzania uprawnień:', error);
+                }
+            }
+
+            function initializeBasicSettings() {
+                // Podstawowe ustawienia profilu
+                document.getElementById('save-profile')?.addEventListener('click', function() {
+                    const name = document.getElementById('user-name').value;
+                    const email = document.getElementById('user-email').value;
+                    
+                    const profile = { name, email, lastUpdated: new Date().toISOString() };
+                    localStorage.setItem('userProfile', JSON.stringify(profile));
+                    showToast('✅ Profil zapisany!');
+                });
+
+                // Toggle switches dla preferencji
+                ['notifications-toggle', 'dark-mode-toggle'].forEach(id => {
+                    document.getElementById(id)?.addEventListener('click', function() {
+                        this.classList.toggle('active');
+                        savePreferences();
+                    });
+                });
+
+                // Wybór języka
+                document.getElementById('language-select')?.addEventListener('change', savePreferences);
+
+                // Przyciski testowe
+                document.getElementById('set-admin')?.addEventListener('click', function() {
+                    const adminUser = {
+                        id: 1,
+                        email: 'admin@wellness.pl',
+                        name: 'Administrator',
+                        role: 'admin',
+                        isAdmin: true
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(adminUser));
+                    showToast('🔐 Ustawiono jako ADMINISTRATOR!');
+                    setTimeout(() => location.reload(), 1000);
+                });
+
+                document.getElementById('set-user')?.addEventListener('click', function() {
+                    const regularUser = {
+                        id: 2,
+                        email: 'user@example.com',
+                        name: 'Zwykły użytkownik',
+                        role: 'user',
+                        isAdmin: false
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(regularUser));
+                    showToast('👤 Ustawiono jako zwykły użytkownik');
+                    setTimeout(() => location.reload(), 1000);
+                });
+            }
+
+            function initializeAdminFeatures() {
+                // AI Configuration
+                initializeAIConfig();
+                
+                // Stripe Configuration
+                initializeStripeConfig();
+                
+                // Access Control
+                initializeAccessControl();
+            }
+
+            function initializeAIConfig() {
+                // Toggle API key visibility
+                document.getElementById('toggle-api-visibility')?.addEventListener('click', function() {
+                    const input = document.getElementById('ai-api-key');
+                    const icon = this.querySelector('i');
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.className = 'fas fa-eye-slash';
+                    } else {
+                        input.type = 'password';
+                        icon.className = 'fas fa-eye';
+                    }
+                });
+
+                // Provider change handler
+                document.getElementById('ai-provider')?.addEventListener('change', function() {
+                    const modelSelect = document.getElementById('ai-model');
+                    const provider = this.value;
+                    
+                    if (modelSelect) {
+                        modelSelect.innerHTML = '<option value="">Wybierz model</option>';
+                        if (provider && aiModels[provider]) {
+                            aiModels[provider].forEach(model => {
+                                modelSelect.innerHTML += `<option value="${model}">${model}</option>`;
+                            });
+                        }
+                    }
+                });
+
+                // Auto-detect AI model
+                document.getElementById('detect-ai-model')?.addEventListener('click', async function() {
+                    const apiKey = document.getElementById('ai-api-key').value.trim();
+                    if (!apiKey) {
+                        showToast('Wprowadź klucz API', 'error');
+                        return;
+                    }
+
+                    updateAIStatus('testing');
+                    this.disabled = true;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Wykrywanie...';
+
+                    try {
+                        const detectedProvider = await detectAIProvider(apiKey);
+                        const availableModels = await fetchAvailableModels(detectedProvider, apiKey);
+                        
+                        displayDetectedModels(detectedProvider, availableModels);
+                        updateAIStatus('online');
+                        showToast(`Wykryto: ${detectedProvider.toUpperCase()}`);
+                    } catch (error) {
+                        updateAIStatus('offline');
+                        showToast('Błąd detekcji: ' + error.message, 'error');
+                    } finally {
+                        this.disabled = false;
+                        this.innerHTML = '<i class="fas fa-search mr-2"></i>Auto-Detect Model';
+                    }
+                });
+
+                // Test AI connection
+                document.getElementById('test-ai-connection')?.addEventListener('click', async function() {
+                    const apiKey = document.getElementById('ai-api-key').value.trim();
+                    const provider = document.getElementById('ai-provider').value;
+                    const model = document.getElementById('ai-model').value;
+
+                    if (!apiKey || !provider || !model) {
+                        showToast('Wypełnij wszystkie pola AI', 'error');
+                        return;
+                    }
+
+                    this.disabled = true;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Testowanie...';
+                    updateAIStatus('testing');
+
+                    try {
+                        await testAIConnection(provider, model, apiKey);
+                        updateAIStatus('online');
+                        showToast('Połączenie z AI udane!');
+                    } catch (error) {
+                        updateAIStatus('offline');
+                        showToast('Błąd połączenia AI: ' + error.message, 'error');
+                    } finally {
+                        this.disabled = false;
+                        this.innerHTML = '<i class="fas fa-test-tube mr-2"></i>Test Connection';
+                    }
+                });
+
+                // Save AI config
+                document.getElementById('save-ai-config')?.addEventListener('click', function() {
+                    const config = {
+                        apiKey: document.getElementById('ai-api-key').value.trim(),
+                        provider: document.getElementById('ai-provider').value,
+                        model: document.getElementById('ai-model').value,
+                        status: 'online',
+                        lastUpdated: new Date().toISOString()
+                    };
+
+                    if (!config.apiKey || !config.provider || !config.model) {
+                        showToast('Wypełnij wszystkie pola', 'error');
+                        return;
+                    }
+
+                    localStorage.setItem('aiConfig', JSON.stringify(config));
+                    updateAIStatus('online');
+                    showToast('Konfiguracja AI zapisana!');
+                });
+            }
+
+            function initializeStripeConfig() {
+                // Test Stripe connection
+                document.getElementById('test-stripe-connection')?.addEventListener('click', async function() {
+                    const publishableKey = document.getElementById('stripe-publishable-key').value.trim();
+                    const secretKey = document.getElementById('stripe-secret-key').value.trim();
+
+                    if (!publishableKey || !secretKey) {
+                        showToast('Wprowadź klucze Stripe', 'error');
+                        return;
+                    }
+
+                    this.disabled = true;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Testowanie...';
+                    updateStripeStatus('testing');
+
+                    try {
+                        await testStripeConnection(publishableKey, secretKey);
+                        updateStripeStatus('online');
+                        showToast('Połączenie z Stripe udane!');
+                    } catch (error) {
+                        updateStripeStatus('offline');
+                        showToast('Błąd połączenia Stripe: ' + error.message, 'error');
+                    } finally {
+                        this.disabled = false;
+                        this.innerHTML = '<i class="fas fa-test-tube mr-2"></i>Test Stripe';
+                    }
+                });
+
+                // Save Stripe config
+                document.getElementById('save-stripe-config')?.addEventListener('click', function() {
+                    const config = {
+                        publishableKey: document.getElementById('stripe-publishable-key').value.trim(),
+                        secretKey: document.getElementById('stripe-secret-key').value.trim(),
+                        monthlyPrice: parseFloat(document.getElementById('premium-monthly-price').value),
+                        yearlyPrice: parseFloat(document.getElementById('premium-yearly-price').value),
+                        status: 'online',
+                        lastUpdated: new Date().toISOString()
+                    };
+
+                    if (!config.publishableKey || !config.secretKey) {
+                        showToast('Wprowadź klucze Stripe', 'error');
+                        return;
+                    }
+
+                    localStorage.setItem('stripeConfig', JSON.stringify(config));
+                    updateStripeStatus('online');
+                    showToast('Konfiguracja Stripe zapisana!');
+                });
+            }
+
+            function initializeAccessControl() {
+                // Toggle switches for access control
+                ['ai-access-toggle', 'premium-access-toggle', 'export-access-toggle'].forEach(id => {
+                    document.getElementById(id)?.addEventListener('click', function() {
+                        this.classList.toggle('active');
+                    });
+                });
+
+                // Save access control
+                document.getElementById('save-access-control')?.addEventListener('click', function() {
+                    const config = {
+                        aiAccess: document.getElementById('ai-access-toggle').classList.contains('active'),
+                        premiumAccess: document.getElementById('premium-access-toggle').classList.contains('active'),
+                        exportAccess: document.getElementById('export-access-toggle').classList.contains('active'),
+                        lastUpdated: new Date().toISOString()
+                    };
+
+                    localStorage.setItem('accessControl', JSON.stringify(config));
+                    showToast('✅ Kontrola dostępu zapisana!');
+                });
+            }
+
+            function loadAllSettings() {
+                // Load user profile
+                const profile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                if (profile.name) document.getElementById('user-name').value = profile.name;
+                if (profile.email) document.getElementById('user-email').value = profile.email;
+
+                // Load preferences
+                const preferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+                if (preferences.notifications === false) {
+                    document.getElementById('notifications-toggle').classList.remove('active');
+                }
+                if (preferences.darkMode) {
+                    document.getElementById('dark-mode-toggle').classList.add('active');
+                }
+                if (preferences.language) {
+                    document.getElementById('language-select').value = preferences.language;
+                }
+
+                // Load AI config
+                const aiConfig = JSON.parse(localStorage.getItem('aiConfig') || '{}');
+                if (aiConfig.apiKey) {
+                    document.getElementById('ai-api-key').value = aiConfig.apiKey;
+                    document.getElementById('ai-provider').value = aiConfig.provider || '';
+                    if (aiConfig.provider) {
+                        document.getElementById('ai-provider').dispatchEvent(new Event('change'));
+                        setTimeout(() => {
+                            document.getElementById('ai-model').value = aiConfig.model || '';
+                        }, 100);
+                    }
+                    updateAIStatus(aiConfig.status || 'offline');
+                }
+
+                // Load Stripe config
+                const stripeConfig = JSON.parse(localStorage.getItem('stripeConfig') || '{}');
+                if (stripeConfig.publishableKey) {
+                    document.getElementById('stripe-publishable-key').value = stripeConfig.publishableKey;
+                    document.getElementById('stripe-secret-key').value = stripeConfig.secretKey || '';
+                    document.getElementById('premium-monthly-price').value = stripeConfig.monthlyPrice || 29.99;
+                    document.getElementById('premium-yearly-price').value = stripeConfig.yearlyPrice || 299.99;
+                    updateStripeStatus(stripeConfig.status || 'offline');
+                }
+
+                // Load access control
+                const accessControl = JSON.parse(localStorage.getItem('accessControl') || '{}');
+                if (!accessControl.aiAccess) document.getElementById('ai-access-toggle')?.classList.remove('active');
+                if (!accessControl.premiumAccess) document.getElementById('premium-access-toggle')?.classList.remove('active');
+                if (!accessControl.exportAccess) document.getElementById('export-access-toggle')?.classList.remove('active');
+            }
+
+            function savePreferences() {
+                const preferences = {
+                    notifications: document.getElementById('notifications-toggle').classList.contains('active'),
+                    darkMode: document.getElementById('dark-mode-toggle').classList.contains('active'),
+                    language: document.getElementById('language-select').value,
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                localStorage.setItem('userPreferences', JSON.stringify(preferences));
+                showToast('✅ Preferencje zapisane!');
+            }
+
+            // Helper functions
+            async function detectAIProvider(apiKey) {
+                if (apiKey.startsWith('sk-') && apiKey.includes('openai')) return 'openai';
+                if (apiKey.startsWith('sk-ant-')) return 'anthropic';
+                if (apiKey.startsWith('AIza')) return 'google';
+                if (apiKey.length === 40 && !apiKey.includes('-')) return 'cohere';
+                
+                throw new Error('Nierozpoznany format klucza API');
+            }
+
+            async function fetchAvailableModels(provider, apiKey) {
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                return aiModels[provider] || [];
+            }
+
+            function displayDetectedModels(provider, models) {
+                const container = document.getElementById('detected-models');
+                const modelList = document.getElementById('model-list');
+                
+                if (container && modelList) {
+                    modelList.innerHTML = '';
+                    models.forEach(model => {
+                        const modelCard = document.createElement('div');
+                        modelCard.className = 'ai-model-card';
+                        modelCard.innerHTML = `
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="font-semibold text-white">${model}</div>
+                                    <div class="text-xs text-white/70">${provider.toUpperCase()}</div>
+                                </div>
+                                <i class="fas fa-check-circle text-green-400"></i>
+                            </div>
+                        `;
+                        modelCard.addEventListener('click', () => selectAIModel(provider, model, modelCard));
+                        modelList.appendChild(modelCard);
+                    });
+                    
+                    container.classList.remove('hidden');
+                }
+            }
+
+            function selectAIModel(provider, model, cardElement) {
+                // Remove previous selection
+                document.querySelectorAll('.ai-model-card').forEach(card => card.classList.remove('selected'));
+                cardElement.classList.add('selected');
+                
+                // Update form
+                document.getElementById('ai-provider').value = provider;
+                document.getElementById('ai-provider').dispatchEvent(new Event('change'));
+                setTimeout(() => {
+                    document.getElementById('ai-model').value = model;
+                }, 100);
+                
+                showToast(`Wybrano: ${model}`);
+            }
+
+            async function testAIConnection(provider, model, apiKey) {
+                // Simulate API test
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Simulate different outcomes
+                const success = Math.random() > 0.3; // 70% success rate for demo
+                if (!success) {
+                    throw new Error('Nieprawidłowy klucz API lub model niedostępny');
+                }
+            }
+
+            async function testStripeConnection(publishableKey, secretKey) {
+                // Simulate Stripe test
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                if (!publishableKey.startsWith('pk_')) {
+                    throw new Error('Nieprawidłowy Publishable Key');
+                }
+                if (!secretKey.startsWith('sk_')) {
+                    throw new Error('Nieprawidłowy Secret Key');
+                }
+            }
+
+            function updateAIStatus(status) {
+                const indicator = document.getElementById('ai-status-indicator');
+                const text = document.getElementById('ai-status-text');
+                
+                if (indicator && text) {
+                    indicator.className = `status-indicator status-${status}`;
+                    const statusTexts = {
+                        online: 'Połączony',
+                        offline: 'Rozłączony',
+                        testing: 'Testowanie...'
+                    };
+                    text.textContent = statusTexts[status] || 'Nieznany';
+                }
+            }
+
+            function updateStripeStatus(status) {
+                const indicator = document.getElementById('stripe-status-indicator');
+                const text = document.getElementById('stripe-status-text');
+                
+                if (indicator && text) {
+                    indicator.className = `status-indicator status-${status}`;
+                    const statusTexts = {
+                        online: 'Aktywny',
+                        offline: 'Nieaktywny',
+                        testing: 'Testowanie...'
+                    };
+                    text.textContent = statusTexts[status] || 'Nieznany';
+                }
+            }
+
+            function showToast(message, type = 'success') {
+                const toast = document.getElementById('toast');
+                const messageEl = document.getElementById('toast-message');
+                
+                if (toast && messageEl) {
+                    messageEl.textContent = message;
+                    toast.className = `fixed bottom-6 right-6 py-3 px-6 rounded-lg shadow-lg z-50 transition-all ${
+                        type === 'success' ? 'bg-green-500' : 
+                        type === 'error' ? 'bg-red-500' : 
+                        'bg-blue-500'
+                    } text-white`;
+                    
+                    toast.classList.remove('hidden');
+                    setTimeout(() => toast.classList.add('hidden'), 3000);
+                }
+            }
+
+            // Initialize status indicators
+            updateAIStatus('offline');
+            updateStripeStatus('offline');
+        });
+
+        // Check admin access on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAccess();
+        });
+
+        function checkAdminAccess() {
+            const userRole = localStorage.getItem('userRole') || 'user';
+            
+            if (userRole !== 'admin') {
+                // Redirect back to main app with error message
+                localStorage.setItem('settingsAccessError', 'Dostęp do ustawień tylko dla administratorów!');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Show admin sections
+            const adminSections = document.querySelectorAll('.admin-only');
+            adminSections.forEach(section => {
+                section.classList.add('visible');
+            });
+            
+            // Log access to settings
+            if (typeof Storage !== 'undefined') {
+                const logs = JSON.parse(localStorage.getItem('systemLogs') || '[]');
+                const newLog = {
+                    id: logs.length + 1,
+                    timestamp: new Date().toISOString(),
+                    level: 'INFO',
+                    category: 'SYSTEM',
+                    message: 'Administrator otworzył panel ustawień',
+                    details: 'Dostęp do settings.html'
+                };
+                logs.unshift(newLog);
+                if (logs.length > 100) logs.splice(100);
+                localStorage.setItem('systemLogs', JSON.stringify(logs));
+            }
+        }
+
+        // Add function to go back to main app
+        function goBackToMainApp() {
+            // Save any unsaved changes notification
+            const hasUnsavedChanges = checkForUnsavedChanges();
+            
+            if (hasUnsavedChanges) {
+                if (confirm('Masz niezapisane zmiany. Czy na pewno chcesz wrócić bez zapisywania?')) {
+                    window.location.href = 'index.html';
+                }
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function checkForUnsavedChanges() {
+            // Check if any form values have been modified
+            // This is a simplified check - you could make it more sophisticated
+            const userName = document.getElementById('user-name').value;
+            const userEmail = document.getElementById('user-email').value;
+            const apiKey = document.getElementById('ai-api-key').value;
+            
+            const savedProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            const savedAIConfig = JSON.parse(localStorage.getItem('aiConfig') || '{}');
+            
+            return (userName !== (savedProfile.name || '')) ||
+                   (userEmail !== (savedProfile.email || '')) ||
+                   (apiKey !== (savedAIConfig.apiKey || ''));
+        }
+
+        // Enhanced back button functionality
+        window.addEventListener('beforeunload', function(e) {
+            if (checkForUnsavedChanges()) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html> 

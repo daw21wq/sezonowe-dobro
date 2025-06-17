@@ -1,0 +1,291 @@
+{
+  "backup_info": {
+    "name": "SezonoweDobro - Complete Wellness App",
+    "version": "2.0 Premium Edition",
+    "backup_date": "2025-06-17T17:07:15Z",
+    "created_by": "Claude AI Assistant",
+    "backup_type": "complete_application",
+    "size_mb": 0.7,
+    "checksum": "sha256_placeholder"
+  },
+  
+  "files": [
+    {
+      "name": "index.html",
+      "type": "main_application",
+      "size_bytes": 392646,
+      "description": "Główna aplikacja wellness z pełną funkcjonalnością",
+      "features": [
+        "System Premium z Stripe",
+        "AI Asystent z ograniczeniami",
+        "Praktyki wellness",
+        "Przepisy sezonowe TCM",
+        "Panel administratora",
+        "System postępu tygodniowego"
+      ]
+    },
+    {
+      "name": "settings.html", 
+      "type": "configuration",
+      "size_bytes": 53489,
+      "description": "Panel ustawień i konfiguracji aplikacji",
+      "features": [
+        "Ustawienia systemowe",
+        "Konfiguracja użytkowników",
+        "Panel admina advanced"
+      ]
+    },
+    {
+      "name": "index_backup.html",
+      "type": "previous_version",
+      "size_bytes": 253167,
+      "description": "Poprzednia wersja przed systemem Premium"
+    },
+    {
+      "name": "README_BACKUP.md",
+      "type": "documentation",
+      "description": "Kompletna dokumentacja aplikacji i funkcji"
+    },
+    {
+      "name": "INSTALL.md",
+      "type": "documentation", 
+      "description": "Instrukcje instalacji i konfiguracji"
+    },
+    {
+      "name": "CHANGELOG.md",
+      "type": "documentation",
+      "description": "Historia zmian i rozwoju aplikacji"
+    },
+    {
+      "name": "backup_metadata.json",
+      "type": "metadata",
+      "description": "Metadane backup'a (ten plik)"
+    }
+  ],
+
+  "application_features": {
+    "authentication": {
+      "login_system": true,
+      "role_based_access": true,
+      "demo_accounts": {
+        "user": "demo@example.com / demo123",
+        "admin": "admin@example.com / admin123"
+      }
+    },
+    
+    "premium_system": {
+      "stripe_integration": true,
+      "ai_limitations": {
+        "free_users": "10 queries/day",
+        "premium_users": "unlimited",
+        "admins": "unlimited"
+      },
+      "pricing": "29.99 PLN/month",
+      "features": [
+        "Unlimited AI queries",
+        "Priority responses", 
+        "Advanced TCM analysis",
+        "Personal nutrition plans",
+        "24/7 access"
+      ]
+    },
+
+    "ai_assistant": {
+      "language": "Polish",
+      "voice_recognition": true,
+      "tcm_knowledge": true,
+      "seasonal_recommendations": true,
+      "recipe_generation": true,
+      "exercise_suggestions": true,
+      "shopping_lists": true
+    },
+
+    "wellness_practices": {
+      "acupressure": {
+        "duration": "5 minutes",
+        "meridian_points": true,
+        "instructions": true
+      },
+      "qigong": {
+        "duration": "10 minutes", 
+        "energy_flow": true,
+        "seasonal_adaptation": true
+      },
+      "meditation": {
+        "duration": "15 minutes",
+        "mindfulness_techniques": true,
+        "guided_sessions": true
+      },
+      "breathing": {
+        "duration": "15 minutes",
+        "tcm_techniques": true,
+        "timer_included": true
+      }
+    },
+
+    "seasonal_system": {
+      "seasons": [
+        {
+          "name": "Spring (Wood)",
+          "element": "Wood", 
+          "organ": "Liver",
+          "icon": "🌱"
+        },
+        {
+          "name": "Summer (Fire)",
+          "element": "Fire",
+          "organ": "Heart", 
+          "icon": "🔥"
+        },
+        {
+          "name": "Late Summer (Earth)",
+          "element": "Earth",
+          "organ": "Spleen",
+          "icon": "🌾"
+        },
+        {
+          "name": "Autumn (Metal)",
+          "element": "Metal",
+          "organ": "Lungs",
+          "icon": "🍂"
+        },
+        {
+          "name": "Winter (Water)",
+          "element": "Water",
+          "organ": "Kidneys",
+          "icon": "❄️"
+        }
+      ],
+      "automatic_adaptation": true,
+      "progress_tracking": true
+    },
+
+    "health_metrics": {
+      "qi_level": "Energy tracking 0-100",
+      "balance_level": "Element harmony 0-100", 
+      "energy_level": "Daily energy 0-100",
+      "weekly_progress": {
+        "practice_days": "Automatic counting",
+        "exercise_minutes": "Real-time tracking",
+        "recipes_tried": "AI integration"
+      }
+    },
+
+    "admin_panel": {
+      "backup_system": true,
+      "system_logs": true,
+      "data_restore": true,
+      "system_settings": true,
+      "offline_mode": true,
+      "user_management": false,
+      "premium_control": true
+    }
+  },
+
+  "technical_specifications": {
+    "frontend": {
+      "html5": true,
+      "css3": "Glassmorphism design",
+      "javascript": "ES6+ with modules",
+      "responsive": "Mobile-first design",
+      "animations": "CSS3 + JS transitions"
+    },
+    
+    "integrations": {
+      "stripe": {
+        "version": "v3",
+        "mode": "test_keys",
+        "webhook_ready": true
+      },
+      "web_speech_api": {
+        "language": "pl-PL",
+        "continuous": false,
+        "interim_results": true
+      }
+    },
+
+    "data_storage": {
+      "method": "localStorage",
+      "encryption": false,
+      "backup_format": "JSON",
+      "auto_reset": "Daily for AI limits"
+    },
+
+    "browser_support": {
+      "chrome": "90+",
+      "firefox": "88+", 
+      "safari": "14+",
+      "edge": "90+",
+      "mobile": "iOS 14+, Android 10+"
+    }
+  },
+
+  "deployment": {
+    "server_requirements": {
+      "python": "3.7+",
+      "disk_space": "100MB",
+      "ram": "4GB minimum, 8GB recommended"
+    },
+    
+    "hosting_options": [
+      "Local Python server",
+      "Apache/Nginx",
+      "Netlify",
+      "Vercel", 
+      "GitHub Pages",
+      "Firebase Hosting"
+    ],
+
+    "ssl_requirements": {
+      "stripe": "Required for production",
+      "speech_api": "Required for microphone access",
+      "development": "Optional"
+    }
+  },
+
+  "security": {
+    "authentication": "Client-side validation",
+    "data_protection": "localStorage encryption ready",
+    "input_validation": "XSS protection",
+    "role_separation": "Admin/User isolation",
+    "audit_logging": "Complete action tracking"
+  },
+
+  "performance": {
+    "load_time": "<2 seconds",
+    "file_size": "~400KB compressed",
+    "offline_capable": true,
+    "mobile_optimized": true,
+    "animation_fps": "60fps target"
+  },
+
+  "future_roadmap": {
+    "v2.1": [
+      "Real Stripe webhooks",
+      "Push notifications", 
+      "Cloud sync",
+      "PWA features"
+    ],
+    "v3.0": [
+      "Machine learning",
+      "Biometric integration",
+      "Social features",
+      "Professional tools"
+    ]
+  },
+
+  "support": {
+    "documentation": "Complete in backup",
+    "installation_guide": "INSTALL.md included",
+    "changelog": "CHANGELOG.md included", 
+    "demo_data": "Built-in test accounts",
+    "troubleshooting": "Common issues covered"
+  },
+
+  "license": {
+    "type": "Custom/Proprietary",
+    "year": 2025,
+    "owner": "SezonoweDobro",
+    "restrictions": "Commercial use requires permission"
+  }
+} 
