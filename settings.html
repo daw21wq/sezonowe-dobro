@@ -207,6 +207,124 @@
             border-color: #4CAF50;
             background: rgba(76, 175, 80, 0.3);
         }
+        
+        /* Mobile Responsive Design */
+        @media (max-width: 480px) {
+            .main-container {
+                max-width: 100%;
+                margin: 0;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                padding: 1rem;
+            }
+            
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .settings-section {
+                padding: 15px;
+                margin-bottom: 15px;
+                border-radius: 16px;
+            }
+            
+            .toggle-switch {
+                width: 45px;
+                height: 22px;
+            }
+            
+            .toggle-switch::after {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .toggle-switch.active::after {
+                transform: translateX(23px);
+            }
+            
+            .form-input {
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 12px;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 360px) {
+            .main-container {
+                padding: 0.5rem;
+            }
+            
+            .back-button {
+                top: 0.5rem;
+                left: 0.5rem;
+                width: 36px;
+                height: 36px;
+            }
+            
+            .settings-section {
+                padding: 12px;
+                margin-bottom: 12px;
+                border-radius: 12px;
+            }
+            
+            .form-input {
+                font-size: 16px;
+                padding: 10px;
+            }
+            
+            .toggle-switch {
+                width: 40px;
+                height: 20px;
+            }
+            
+            .toggle-switch::after {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .toggle-switch.active::after {
+                transform: translateX(20px);
+            }
+        }
+
+        /* Large phones and small tablets */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .main-container {
+                max-width: 100%;
+                margin: 0;
+                border-radius: 0;
+                padding: 2rem;
+            }
+            
+            .settings-section {
+                padding: 24px;
+                margin-bottom: 24px;
+            }
+        }
+
+        /* Landscape orientation on phones */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .main-container {
+                padding: 1rem;
+            }
+            
+            .back-button {
+                top: 0.5rem;
+                left: 0.5rem;
+                width: 36px;
+                height: 36px;
+            }
+            
+            .settings-section {
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 12px;
+            }
+        }
     </style>
 </head>
 <body>

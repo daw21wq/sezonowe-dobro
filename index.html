@@ -1452,6 +1452,8 @@
                 max-width: 100%;
                 margin: 0;
                 border-radius: 0;
+                border-left: none;
+                border-right: none;
             }
             
             .content {
@@ -1460,18 +1462,153 @@
             
             .feature-grid {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
             
             .wellness-metrics {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
             
             .header {
-                padding: 40px 20px 20px;
+                padding: 40px 15px 20px;
             }
             
             .logo {
                 font-size: 24px;
+            }
+            
+            .tagline {
+                font-size: 12px;
+            }
+            
+            .nav-tab {
+                font-size: 12px;
+                padding: 12px 0;
+            }
+            
+            /* Modal improvements for mobile */
+            .modal {
+                padding: 10px !important;
+            }
+            
+            .modal > div {
+                max-width: 95% !important;
+                margin: 10px auto !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+            
+            /* Touch improvements */
+            .action-btn, .nav-tab, .glass-card {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .action-btn {
+                min-height: 44px; /* iOS minimum touch target */
+                font-size: 16px;
+            }
+            
+            /* Scrollable content on small screens */
+            .wellness-metrics, .feature-grid {
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+        }
+
+        /* Extra small screens (older phones) */
+        @media (max-width: 360px) {
+            .app-container {
+                max-width: 100%;
+            }
+            
+            .content {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 35px 10px 15px;
+            }
+            
+            .logo {
+                font-size: 20px;
+            }
+            
+            .tagline {
+                font-size: 11px;
+            }
+            
+            .wellness-metrics {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .glass-card {
+                padding: 12px;
+                margin: 8px 0;
+            }
+            
+            .nav-tab {
+                font-size: 11px;
+                padding: 10px 0;
+            }
+            
+            .metric-label {
+                font-size: 10px;
+            }
+            
+            .current-season {
+                font-size: 11px;
+                padding: 6px 12px;
+            }
+        }
+
+        /* Large phones and small tablets */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .app-container {
+                max-width: 100%;
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .wellness-metrics {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Landscape orientation on phones */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                padding: 20px 15px 15px;
+            }
+            
+            .logo {
+                font-size: 20px;
+            }
+            
+            .tagline {
+                font-size: 11px;
+                margin-bottom: 10px;
+            }
+            
+            .current-season {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+            
+            .nav-tab {
+                padding: 8px 0;
+                font-size: 12px;
             }
         }
 
@@ -1521,7 +1658,7 @@
             border-radius: 12px;
             background: rgba(76, 175, 80, 0.1);
             color: white;
-            font-size: 14px;
+            font-size: 16px; /* Prevents zoom on iOS */
             transition: all 0.3s ease;
             box-sizing: border-box;
         }
@@ -6958,40 +7095,40 @@
                                  meridian: 'Wątroba (LV)',
                                  bestTime: 'Wczesny ranek, przed jedzeniem',
                                  contraindications: 'Zapalenie wątroby, ciąża, osłabienie'
-                                                           }
-                          ]
-                      },
-                      {
-                          name: 'Ćwiczenia Energetyczne',
-                          focus: 'Aktywacja Qi wątroby',
-                          emoji: '🌿',
-                          color: '#4CAF50',
-                          practices: [
-                              {
-                                  name: 'Stretching Smoka',
-                                  emoji: '🐉',
-                                  description: 'Dynamiczne ruchy przywracające elastyczność meridianów.',
-                                  duration: '10-15 minut',
-                                  steps: [
-                                      'Stań w pozycji szerokiej, ręce wzdłuż ciała',
-                                      'Wyciągnij ręce w bok na wysokość ramion',
-                                      'Skręć tułów w lewo, wydychając "Shu"',
-                                      'Wróć do centrum, wdychając głęboko',
-                                      'Skręć tułów w prawo, wydychając "Shu"',
-                                      'Powtórz 8 razy w każdą stronę',
-                                      'Zakończ trzema głębokimi oddechami'
-                                  ],
-                                  benefits: 'Uwalnia napięcie w wątrobie, poprawia krążenie Qi',
-                                  element: 'Drewno',
-                                  energyType: 'Yang mobilizujące',
-                                  meridian: 'Pęcherzyk żółciowy (GB)',
-                                  bestTime: 'Rano po przebudzeniu',
-                                  contraindications: 'Zawroty głowy, problemy z kręgosłupem'
-                              }
-                          ]
-                      }
-                  ],
-                  'Ogień': [
+                             }
+                         ]
+                     },
+                     {
+                         name: 'Ćwiczenia Energetyczne',
+                         focus: 'Aktywacja Qi wątroby',
+                         emoji: '🌿',
+                         color: '#4CAF50',
+                         practices: [
+                             {
+                                 name: 'Stretching Smoka',
+                                 emoji: '🐉',
+                                 description: 'Dynamiczne ruchy przywracające elastyczność meridianów.',
+                                 duration: '10-15 minut',
+                                 steps: [
+                                     'Stań w pozycji szerokiej, ręce wzdłuż ciała',
+                                     'Wyciągnij ręce w bok na wysokość ramion',
+                                     'Skręć tułów w lewo, wydychając "Shu"',
+                                     'Wróć do centrum, wdychając głęboko',
+                                     'Skręć tułów w prawo, wydychając "Shu"',
+                                     'Powtórz 8 razy w każdą stronę',
+                                     'Zakończ trzema głębokimi oddechami'
+                                 ],
+                                 benefits: 'Uwalnia napięcie w wątrobie, poprawia krążenie Qi',
+                                 element: 'Drewno',
+                                 energyType: 'Yang mobilizujące',
+                                 meridian: 'Pęcherzyk żółciowy (GB)',
+                                 bestTime: 'Rano po przebudzeniu',
+                                 contraindications: 'Zawroty głowy, problemy z kręgosłupem'
+                             }
+                         ]
+                     }
+                 ],
+                 'Ogień': [
                      {
                          name: 'Medytacje Radości',
                          focus: 'Harmonia serca i umysłu',
@@ -7042,69 +7179,69 @@
                                  bestTime: 'Gorące dni, po południu',
                                  contraindications: 'Przeziębienie, słaba energia, zima'
                              }
-                          ]
-                      },
-                      {
-                          name: 'Ćwiczenia Chłodzące',
-                          focus: 'Ochładzanie organizmu',
-                          emoji: '❄️',
-                          color: '#2196F3',
-                          practices: [
-                              {
-                                  name: 'Ruch Łabędzia w Wodzie',
-                                  emoji: '🦢',
-                                  description: 'Płynne ruchy łagodzące nadmierną energię Yang.',
-                                  duration: '12-20 minut',
-                                  steps: [
-                                      'Stań tyłem do słońca w cieniu',
-                                      'Ręce unieś powoli nad głowę jak skrzydła',
-                                      'Pochyl się do przodu z prostymi plecami',
-                                      'Ręce opuść w dół jak łabędź nurkujący',
-                                      'Powoli prostuj się, unosząc ręce',
-                                      'Oddychaj głęboko i spokojnie',
-                                      'Powtórz 10-15 razy bardzo powoli'
-                                  ],
-                                  benefits: 'Uspokaja Shen, ochładza krew, równoważy emocje',
-                                  element: 'Ogień',
-                                  energyType: 'Yin harmonizujące',
-                                  meridian: 'Osierdziк (PC), Trzeci Ogrzewacz (TH)',
-                                  bestTime: 'Wczesny wieczór w cieniu',
-                                  contraindications: 'Zimno w ciele, depresja, słabość'
-                              }
-                          ]
-                      },
-                      {
-                          name: 'Wizualizacje Serca',
-                          focus: 'Harmonia emocjonalna',
-                          emoji: '💖',
-                          color: '#E91E63',
-                          practices: [
-                              {
-                                  name: 'Fontanna Szczęścia',
-                                  emoji: '⛲',
-                                  description: 'Wizualizacja chłodnej fontanny w sercu.',
-                                  duration: '8-15 minut',
-                                  steps: [
-                                      'Usiądź wygodnie twarzą na północ',
-                                      'Ręce połóż na sercu',
-                                      'Wyobraź sobie chłodną fontannę w centrum piersi',
-                                      'Fontanna rozpryskuje krystalicznie czystą wodę',
-                                      'Woda chłodzi i uspokaja całe serce',
-                                      'Poczuj radość i spokój płynący z fontanny',
-                                      'Pozwól wodzie obmyć wszystkie gorące emocje',
-                                      'Pozostań w tym chłodnym, radosnym stanie'
-                                  ],
-                                  benefits: 'Ochładza serce, przynosi radość, uspokaja umysł',
-                                  element: 'Ogień',
-                                  energyType: 'Yin nawilżające',
-                                  meridian: 'Serce (HT)',
-                                  bestTime: 'Południe, podczas największego upału',
-                                  contraindications: 'Słabe serce, zimno w piersiach, smutek'
-                              }
-                          ]
-                      }
-                  ],
-                  'Ziemia': [
+                         ]
+                     },
+                     {
+                         name: 'Ćwiczenia Chłodzące',
+                         focus: 'Ochładzanie organizmu',
+                         emoji: '❄️',
+                         color: '#2196F3',
+                         practices: [
+                             {
+                                 name: 'Ruch Łabędzia w Wodzie',
+                                 emoji: '🦢',
+                                 description: 'Płynne ruchy łagodzące nadmierną energię Yang.',
+                                 duration: '12-20 minut',
+                                 steps: [
+                                     'Stań tyłem do słońca w cieniu',
+                                     'Ręce unieś powoli nad głowę jak skrzydła',
+                                     'Pochyl się do przodu z prostymi plecami',
+                                     'Ręce opuść w dół jak łabędź nurkujący',
+                                     'Powoli prostuj się, unosząc ręce',
+                                     'Oddychaj głęboko i spokojnie',
+                                     'Powtórz 10-15 razy bardzo powoli'
+                                 ],
+                                 benefits: 'Uspokaja Shen, ochładza krew, równoważy emocje',
+                                 element: 'Ogień',
+                                 energyType: 'Yin harmonizujące',
+                                 meridian: 'Osierdziк (PC), Trzeci Ogrzewacz (TH)',
+                                 bestTime: 'Wczesny wieczór w cieniu',
+                                 contraindications: 'Zimno w ciele, depresja, słabość'
+                             }
+                         ]
+                     },
+                     {
+                         name: 'Wizualizacje Serca',
+                         focus: 'Harmonia emocjonalna',
+                         emoji: '💖',
+                         color: '#E91E63',
+                         practices: [
+                             {
+                                 name: 'Fontanna Szczęścia',
+                                 emoji: '⛲',
+                                 description: 'Wizualizacja chłodnej fontanny w sercu.',
+                                 duration: '8-15 minut',
+                                 steps: [
+                                     'Usiądź wygodnie twarzą na północ',
+                                     'Ręce połóż na sercu',
+                                     'Wyobraź sobie chłodną fontannę w centrum piersi',
+                                     'Fontanna rozpryskuje krystalicznie czystą wodę',
+                                     'Woda chłodzi i uspokaja całe serce',
+                                     'Poczuj radość i spokój płynący z fontanny',
+                                     'Pozwól wodzie obmyć wszystkie gorące emocje',
+                                     'Pozostań w tym chłodnym, radosnym stanie'
+                                 ],
+                                 benefits: 'Ochładza serce, przynosi radość, uspokaja umysł',
+                                 element: 'Ogień',
+                                 energyType: 'Yin nawilżające',
+                                 meridian: 'Serce (HT)',
+                                 bestTime: 'Południe, podczas największego upału',
+                                 contraindications: 'Słabe serce, zimno w piersiach, smutek'
+                             }
+                         ]
+                     }
+                 ],
+                 'Ziemia': [
                      {
                          name: 'Medytacje Stabilizujące',
                          focus: 'Równowaga i wewnętrzny spokój',
@@ -7133,40 +7270,40 @@
                                  bestTime: 'Późne popołudnie (15:00-17:00)',
                                  contraindications: 'Silne lęki, claustrofobia, mania'
                              }
-                          ]
-                      },
-                      {
-                          name: 'Ćwiczenia Równowagi',
-                          focus: 'Stabilizacja centrum',
-                          emoji: '⚖️',
-                          color: '#FFC107',
-                          practices: [
-                              {
-                                  name: 'Postawa Góry',
-                                  emoji: '⛰️',
-                                  description: 'Statyczne pozycje wzmacniające centrum ciała.',
-                                  duration: '5-12 minut',
-                                  steps: [
-                                      'Stań w pozycji hip-width apart',
-                                      'Wyobraź sobie korzenie wyrastające ze stóp',
-                                      'Korona głowy ciągnie w górę do nieba',
-                                      'Oddychaj do brzucha, powiększając go na wdechu',
-                                      'Poczuj stabilność między niebem a ziemią',
-                                      'Pozostań nieruchomo jak góra',
-                                      'Skoncentruj się na centrum ciała',
-                                      'Zakończ trzema głębokimi oddechami'
-                                  ],
-                                  benefits: 'Wzmacnia śledzionę, poprawia równowagę, stabilizuje emocje',
-                                  element: 'Ziemia',
-                                  energyType: 'Qi centrowujące',
-                                  meridian: 'Śledziona (SP), Żołądek (ST)',
-                                  bestTime: 'Przejścia między sezonami',
-                                  contraindications: 'Problemy z równowagą, zawroty głowy'
-                              }
-                          ]
-                      }
-                  ],
-                  'Metal': [
+                         ]
+                     },
+                     {
+                         name: 'Ćwiczenia Równowagi',
+                         focus: 'Stabilizacja centrum',
+                         emoji: '⚖️',
+                         color: '#FFC107',
+                         practices: [
+                             {
+                                 name: 'Postawa Góry',
+                                 emoji: '⛰️',
+                                 description: 'Statyczne pozycje wzmacniające centrum ciała.',
+                                 duration: '5-12 minut',
+                                 steps: [
+                                     'Stań w pozycji hip-width apart',
+                                     'Wyobraź sobie korzenie wyrastające ze stóp',
+                                     'Korona głowy ciągnie w górę do nieba',
+                                     'Oddychaj do brzucha, powiększając go na wdechu',
+                                     'Poczuj stabilność między niebem a ziemią',
+                                     'Pozostań nieruchomo jak góra',
+                                     'Skoncentruj się na centrum ciała',
+                                     'Zakończ trzema głębokimi oddechami'
+                                 ],
+                                 benefits: 'Wzmacnia śledzionę, poprawia równowagę, stabilizuje emocje',
+                                 element: 'Ziemia',
+                                 energyType: 'Qi centrowujące',
+                                 meridian: 'Śledziona (SP), Żołądek (ST)',
+                                 bestTime: 'Przejścia między sezonami',
+                                 contraindications: 'Problemy z równowagą, zawroty głowy'
+                             }
+                         ]
+                     }
+                 ],
+                 'Metal': [
                      {
                          name: 'Medytacje Oczyszczające',
                          focus: 'Oddech i wewnętrzna siła',
@@ -7195,40 +7332,40 @@
                                  bestTime: 'Zachód słońca (17:00-19:00)',
                                  contraindications: 'Astma ostra, silne emocje, nadciśnienie'
                              }
-                          ]
-                      },
-                      {
-                          name: 'Ćwiczenia Oddechowe',
-                          focus: 'Wzmocnienie płuc',
-                          emoji: '🌬️',
-                          color: '#9E9E9E',
-                          practices: [
-                              {
-                                  name: 'Oddychanie Jesiennego Wiatru',
-                                  emoji: '🍃',
-                                  description: 'Oczyszczająca technika oddechowa na jesień.',
-                                  duration: '8-15 minut',
-                                  steps: [
-                                      'Usiądź twarzą na zachód',
-                                      'Ręce ułóż na dolnych żebrach',
-                                      'Wdechnij głęboko, rozszerzając żebra',
-                                      'Wydechnij powoli z dźwiękiem "Si"',
-                                      'Wyobraź sobie biały dym opuszczający płuca',
-                                      'Poczuj jak płuca się oczyszczają',
-                                      'Powtórz 18 razy (liczba Metal)',
-                                      'Zakończ naturalnym oddychaniem'
-                                  ],
-                                  benefits: 'Oczyszcza płuca, wzmacnia Wei Qi, poprawia odporność',
-                                  element: 'Metal',
-                                  energyType: 'Yang oczyszczające',
-                                  meridian: 'Płuca (LU), Jelito grube (LI)',
-                                  bestTime: 'Jesienne poranki',
-                                  contraindications: 'Astma ciężka, silny kaszel, gorączka'
-                              }
-                          ]
-                      }
-                  ],
-                  'Woda': [
+                         ]
+                     },
+                     {
+                         name: 'Ćwiczenia Oddechowe',
+                         focus: 'Wzmocnienie płuc',
+                         emoji: '🌬️',
+                         color: '#9E9E9E',
+                         practices: [
+                             {
+                                 name: 'Oddychanie Jesiennego Wiatru',
+                                 emoji: '🍃',
+                                 description: 'Oczyszczająca technika oddechowa na jesień.',
+                                 duration: '8-15 minut',
+                                 steps: [
+                                     'Usiądź twarzą na zachód',
+                                     'Ręce ułóż na dolnych żebrach',
+                                     'Wdechnij głęboko, rozszerzając żebra',
+                                     'Wydechnij powoli z dźwiękiem "Si"',
+                                     'Wyobraź sobie biały dym opuszczający płuca',
+                                     'Poczuj jak płuca się oczyszczają',
+                                     'Powtórz 18 razy (liczba Metal)',
+                                     'Zakończ naturalnym oddychaniem'
+                                 ],
+                                 benefits: 'Oczyszcza płuca, wzmacnia Wei Qi, poprawia odporność',
+                                 element: 'Metal',
+                                 energyType: 'Yang oczyszczające',
+                                 meridian: 'Płuca (LU), Jelito grube (LI)',
+                                 bestTime: 'Jesienne poranki',
+                                 contraindications: 'Astma ciężka, silny kaszel, gorączka'
+                             }
+                         ]
+                     }
+                 ],
+                 'Woda': [
                      {
                          name: 'Medytacje Regenerujące',
                          focus: 'Odnowa i głęboki odpoczynek',
@@ -7256,74 +7393,74 @@
                                  meridian: 'Nerki (KI), Pęcherz moczowy (BL)',
                                  bestTime: 'Wieczór (19:00-21:00)',
                                  contraindications: 'Depresja, nadmierna senność, brak motywacji'
-                                                           }
-                          ]
-                      },
-                      {
-                          name: 'Ćwiczenia Regenerujące',
-                          focus: 'Odnowa esencji życiowej',
-                          emoji: '🔋',
-                          color: '#2196F3',
-                          practices: [
-                              {
-                                  name: 'Masaż Nerek',
-                                  emoji: '👐',
-                                  description: 'Gentle self-massage do wzmocnienia Jing.',
-                                  duration: '10-20 minut',
-                                  steps: [
-                                      'Usiądź wygodnie, plecy proste',
-                                      'Rozgrzej dłonie pocierając je o siebie',
-                                      'Połóż dłonie na dolną część pleców (nerki)',
-                                      'Masuj okrężnymi ruchami 36 razy',
-                                      'Poczuj ciepło przenikające do nerek',
-                                      'Oddychaj głęboko do brzucha',
-                                      'Wizualizuj czarną wodę napełniającą nerki',
-                                      'Zakończ, pozostawiając dłonie na nerkach'
-                                  ],
-                                  benefits: 'Wzmacnia esencję Jing, regeneruje nerki, poprawia witalność',
-                                  element: 'Woda',
-                                  energyType: 'Yang aktywizujące',
-                                  meridian: 'Nerki (KI)',
-                                  bestTime: 'Wieczór przed snem',
-                                  contraindications: 'Zapalenie nerek, gorączka, hiperttensja'
-                              }
-                          ]
-                      },
-                      {
-                          name: 'Medytacje Nocne',
-                          focus: 'Głęboka regeneracja',
-                          emoji: '🌜',
-                          color: '#1A237E',
-                          practices: [
-                              {
-                                  name: 'Sen Nefrytu',
-                                  emoji: '💎',
-                                  description: 'Przygotowanie do regenerującego snu.',
-                                  duration: '15-30 minut',
-                                  steps: [
-                                      'Połóż się w ciemnym, cichym pokoju',
-                                      'Ręce na dolnej części brzucha (Dan Tian)',
-                                      'Oddychaj bardzo powoli i cicho',
-                                      'Wyobraź sobie czarny nefryty w nerkach',
-                                      'Nefryty gromadzi energię życiową',
-                                      'Pozwól ciału całkowicie się rozluźnić',
-                                      'Poczuj jak energia zgromadzona w nerkach',
-                                      'Płynnie przejdź w sen lub głęboką relaksację'
-                                  ],
-                                  benefits: 'Restauruje Jing, przygotowuje do głębokiego snu, odnawia życie',
-                                  element: 'Woda',
-                                  energyType: 'Yin esencjonalne',
-                                  meridian: 'Nerki (KI), Pęcherz (BL)',
-                                  bestTime: 'Tuż przed snem (21:00-23:00)',
-                                  contraindications: 'Bezsenność, lęki, nadmiernia stymulacja'
-                              }
-                          ]
-                      }
-                  ]
-              };
-              
-              return allData[element] || allData['Ogień'];
-          }
+                             }
+                         ]
+                     },
+                     {
+                         name: 'Ćwiczenia Regenerujące',
+                         focus: 'Odnowa esencji życiowej',
+                         emoji: '🔋',
+                         color: '#2196F3',
+                         practices: [
+                             {
+                                 name: 'Masaż Nerek',
+                                 emoji: '👐',
+                                 description: 'Gentle self-massage do wzmocnienia Jing.',
+                                 duration: '10-20 minut',
+                                 steps: [
+                                     'Usiądź wygodnie, plecy proste',
+                                     'Rozgrzej dłonie pocierając je o siebie',
+                                     'Połóż dłonie na dolnej części pleców (nerki)',
+                                     'Masuj okrężnymi ruchami 36 razy',
+                                     'Poczuj ciepło przenikające do nerek',
+                                     'Oddychaj głęboko do brzucha',
+                                     'Wizualizuj czarną wodę napełniającą nerki',
+                                     'Zakończ, pozostawiając dłonie na nerkach'
+                                 ],
+                                 benefits: 'Wzmacnia esencję Jing, regeneruje nerki, poprawia witalność',
+                                 element: 'Woda',
+                                 energyType: 'Yang aktywizujące',
+                                 meridian: 'Nerki (KI)',
+                                 bestTime: 'Wieczór przed snem',
+                                 contraindications: 'Zapalenie nerek, gorączka, hiperttensja'
+                             }
+                         ]
+                     },
+                     {
+                         name: 'Medytacje Nocne',
+                         focus: 'Głęboka regeneracja',
+                         emoji: '🌜',
+                         color: '#1A237E',
+                         practices: [
+                             {
+                                 name: 'Sen Nefrytu',
+                                 emoji: '💎',
+                                 description: 'Przygotowanie do regenerującego snu.',
+                                 duration: '15-30 minut',
+                                 steps: [
+                                     'Połóż się w ciemnym, cichym pokoju',
+                                     'Ręce na dolnej części brzucha (Dan Tian)',
+                                     'Oddychaj bardzo powoli i cicho',
+                                     'Wyobraź sobie czarny nefryty w nerkach',
+                                     'Nefryty gromadzi energię życiową',
+                                     'Pozwól ciału całkowicie się rozluźnić',
+                                     'Poczuj jak energia zgromadzona w nerkach',
+                                     'Płynnie przejdź w sen lub głęboką relaksację'
+                                 ],
+                                 benefits: 'Restauruje Jing, przygotowuje do głębokiego snu, odnawia życie',
+                                 element: 'Woda',
+                                 energyType: 'Yin esencjonalne',
+                                 meridian: 'Nerki (KI), Pęcherz (BL)',
+                                 bestTime: 'Tuż przed snem (21:00-23:00)',
+                                 contraindications: 'Bezsenność, lęki, nadmiernia stymulacja'
+                             }
+                         ]
+                     }
+                 ]
+             };
+             
+             return allData[element] || allData['Ogień'];
+         }
 
          function getFaceYogaData() {
              return [
