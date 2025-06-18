@@ -506,7 +506,7 @@
             font-size: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
-            white-space: nowrap;
+            white-space: normal;
         }
 
         .quick-action-btn:hover {
@@ -936,7 +936,7 @@
         }
 
         .herbs-category.expanded .herbs-category-content {
-            max-height: 800px;
+            max-height: none;
         }
 
         .herbs-grid {
@@ -1002,6 +1002,9 @@
             color: rgba(255, 255, 255, 0.7);
             font-size: 13px;
             line-height: 1.4;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         /* Face Yoga Modal Styles */
@@ -1092,7 +1095,7 @@
         }
 
         .yoga-category.expanded .yoga-category-content {
-            max-height: 1000px;
+            max-height: none;
         }
 
         .yoga-exercises-grid {
@@ -1199,6 +1202,9 @@
             color: rgba(255, 255, 255, 0.8);
             font-size: 13px;
             line-height: 1.4;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .yoga-duration {
@@ -1300,7 +1306,7 @@
         }
 
         .energy-practice-category.expanded .energy-practice-content {
-            max-height: 1000px;
+            max-height: none;
         }
 
         .energy-practices-grid {
@@ -1515,6 +1521,28 @@
                 max-height: 60vh;
                 overflow-y: auto;
             }
+            
+            /* Fix text truncation on mobile */
+            .herb-properties-text, .yoga-benefits-text {
+                white-space: normal;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+            
+            .herb-card, .yoga-exercise-card {
+                min-height: auto;
+                height: auto;
+            }
+            
+            .herb-properties, .yoga-exercise-steps, .yoga-benefits {
+                min-height: auto;
+            }
+            
+            /* Modal content improvements */
+            .herbs-modal-content, .face-yoga-modal-content, .seasonal-energy-modal-content {
+                padding: 15px;
+                max-height: 95vh;
+            }
         }
 
         /* Extra small screens (older phones) */
@@ -1561,6 +1589,28 @@
             .current-season {
                 font-size: 11px;
                 padding: 6px 12px;
+            }
+            
+            /* Additional text truncation fixes for extra small screens */
+            .herbs-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .yoga-exercises-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .herb-properties-text, .yoga-benefits-text {
+                font-size: 12px;
+                line-height: 1.5;
+            }
+            
+            .herb-card, .yoga-exercise-card {
+                padding: 12px;
             }
         }
 
@@ -1623,6 +1673,22 @@
             .header {
                 background: rgba(76, 175, 80, 0.2) !important;
             }
+        }
+
+        /* Global text truncation prevention */
+        .glass-card, .herb-card, .yoga-exercise-card, .energy-practice-card {
+            height: auto;
+            min-height: auto;
+            overflow: visible;
+        }
+
+        .herb-properties, .yoga-exercise-steps, .yoga-benefits, .energy-practice-details {
+            height: auto;
+            min-height: auto;
+            overflow: visible;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         /* Login Screen Styles */
