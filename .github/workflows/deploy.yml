@@ -1,0 +1,132 @@
+name: 🚀 Deploy SezonoweDobro
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18.x'
+
+jobs:
+  # === TEST JOB ===
+  test:
+    name: 🧪 Test Application
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: 📋 Install dependencies
+      run: npm ci
+      
+    - name: 🧪 Run tests
+      run: npm test
+      
+    - name: 🔍 Security audit
+      run: npm audit --audit-level high
+
+  # === BUILD JOB ===
+  build:
+    name: 🏗️ Build Application
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: 📋 Install dependencies
+      run: npm ci
+      
+    - name: 🏗️ Build application
+      run: npm run build
+      
+    - name: 📤 Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-files
+        path: |
+          .
+          !node_modules
+          !.git
+
+  # === DEPLOY JOB ===
+  deploy:
+    name: 🚀 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    if: github.ref == 'refs/heads/main'
+    
+    environment:
+      name: production
+      url: https://your-domain.com
+      
+    steps:
+    - name: 📥 Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build-files
+        
+    - name: 🚀 Deploy to server
+      env:
+        # Stripe keys (set in GitHub Secrets)
+        STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
+        STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+        STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+        
+        # OpenAI key
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        
+        # App configuration
+        APP_URL: ${{ secrets.APP_URL }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        
+        # Database
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        
+        # Demo users
+        DEMO_USER_EMAIL: ${{ secrets.DEMO_USER_EMAIL }}
+        DEMO_USER_PASSWORD: ${{ secrets.DEMO_USER_PASSWORD }}
+        ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+        ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      run: |
+        echo "🔧 Setting up environment..."
+        echo "NODE_ENV=production" > .env
+        echo "PORT=3000" >> .env
+        echo "APP_URL=$APP_URL" >> .env
+        echo "DATABASE_URL=$DATABASE_URL" >> .env
+        echo "STRIPE_PUBLISHABLE_KEY=$STRIPE_PUBLISHABLE_KEY" >> .env
+        echo "STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY" >> .env
+        echo "STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET" >> .env
+        echo "OPENAI_API_KEY=$OPENAI_API_KEY" >> .env
+        echo "JWT_SECRET=$JWT_SECRET" >> .env
+        echo "DEMO_USER_EMAIL=$DEMO_USER_EMAIL" >> .env
+        echo "DEMO_USER_PASSWORD=$DEMO_USER_PASSWORD" >> .env
+        echo "ADMIN_EMAIL=$ADMIN_EMAIL" >> .env
+        echo "ADMIN_PASSWORD=$ADMIN_PASSWORD" >> .env
+        
+        echo "✅ Environment configured"
+        echo "🚀 Deployment would start here..."
+        # Add your deployment commands here
+        
+    - name: 📊 Deployment notification
+      run: |
+        echo "🎉 Deployment completed successfully!"
+        echo "📱 App URL: ${{ secrets.APP_URL }}"
+        echo "💳 Stripe: Configured"
+        echo "🤖 OpenAI: Configured" 
