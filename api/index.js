@@ -30,7 +30,10 @@ app.use(helmet({
 
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://twoja-domena.com'] 
+    ? [
+        'https://daw21wq.github.io',
+        'https://twoja-domena.com'
+      ]
     : ['http://localhost:3000', 'http://127.0.0.1:3000'],
   credentials: true
 }));
