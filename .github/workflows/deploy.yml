@@ -104,6 +104,11 @@ jobs:
         DEMO_USER_PASSWORD: ${{ secrets.DEMO_USER_PASSWORD }}
         ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
         ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+        
+        # Supabase
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
       run: |
         echo "🔧 Setting up environment..."
         echo "NODE_ENV=production" > .env
@@ -119,6 +124,9 @@ jobs:
         echo "DEMO_USER_PASSWORD=$DEMO_USER_PASSWORD" >> .env
         echo "ADMIN_EMAIL=$ADMIN_EMAIL" >> .env
         echo "ADMIN_PASSWORD=$ADMIN_PASSWORD" >> .env
+        echo "SUPABASE_URL=$SUPABASE_URL" >> .env
+        echo "SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY" >> .env
+        echo "SUPABASE_SERVICE_KEY=$SUPABASE_SERVICE_KEY" >> .env
         
         echo "✅ Environment configured"
         echo "🚀 Deployment would start here..."

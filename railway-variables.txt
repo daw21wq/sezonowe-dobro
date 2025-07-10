@@ -1,0 +1,58 @@
+# 🚀 RAILWAY ENVIRONMENT VARIABLES - GOTOWE DO SKOPIOWANIA
+
+## ✅ PODSTAWOWE ZMIENNE (skopiuj do Railway):
+
+NODE_ENV=production
+PORT=3000
+APP_URL=https://twoja-railway-domena.up.railway.app
+
+## ✅ WYGENEROWANE SECRETS:
+
+JWT_SECRET=7a6b528245093690c9a1abbaa7f97eed02d507e31430c6777eed74a3df110246
+ADMIN_PASSWORD=Wellness2024!F6C4094CC3919E7C@
+DEMO_USER_EMAIL=demo@sezonoweDobro.pl
+DEMO_USER_PASSWORD=wellness123
+ADMIN_EMAIL=admin@sezonoweDobro.pl
+OPENAI_MODEL=gpt-4-turbo-preview
+
+## ❗ POTRZEBUJESZ JESZCZE (pobierz z dashboardów):
+
+# 🤖 Z OpenAI (https://platform.openai.com/api-keys):
+OPENAI_API_KEY=sk-proj_TU_WKLEJ_SWÓJ_KLUCZ
+
+# 💳 Ze Stripe (https://dashboard.stripe.com/apikeys):
+STRIPE_PUBLISHABLE_KEY=pk_live_TU_WKLEJ_SWÓJ_KLUCZ
+STRIPE_SECRET_KEY=sk_live_TU_WKLEJ_SWÓJ_KLUCZ
+STRIPE_WEBHOOK_SECRET=whsec_TU_WKLEJ_SWÓJ_KLUCZ
+STRIPE_MONTHLY_PRICE_ID=price_TU_WKLEJ_MONTHLY_ID
+STRIPE_YEARLY_PRICE_ID=price_TU_WKLEJ_YEARLY_ID
+
+# 🗄️ Z Supabase (https://supabase.com/dashboard):
+SUPABASE_URL=https://twój-projekt.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIs_TU_WKLEJ_ANON_KEY
+SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIs_TU_WKLEJ_SERVICE_KEY
+
+---
+
+## 🚀 PILNE KROKI DLA RAILWAY:
+
+1. Idź na: https://railway.app
+2. Zaloguj się przez GitHub
+3. Kliknij projekt "sezonowe-dobro"
+4. Kliknij "Variables" (lewa strona)
+5. Dodaj KAŻDĄ zmienną powyżej (użyj New Variable)
+6. Kliknij "Deployments" → "Redeploy"
+
+## ⚡ MINIMALNE ZMIENNE ŻEBY URUCHOMIĆ:
+Jeśli chcesz szybko przetestować, dodaj na razie te:
+
+NODE_ENV=production
+PORT=3000
+JWT_SECRET=7a6b528245093690c9a1abbaa7f97eed02d507e31430c6777eed74a3df110246
+DEMO_USER_EMAIL=demo@sezonoweDobro.pl
+DEMO_USER_PASSWORD=wellness123
+ADMIN_EMAIL=admin@sezonoweDobro.pl
+ADMIN_PASSWORD=Wellness2024!F6C4094CC3919E7C@
+OPENAI_MODEL=gpt-4-turbo-preview
+
+To powinno pozwolić aplikacji się uruchomić (bez Stripe/OpenAI). 

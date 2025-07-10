@@ -8,6 +8,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
 
 const app = express();
@@ -53,13 +54,21 @@ const stripeLimiter = rateLimit({
 });
 
 // === STRIPE CONFIGURATION ===
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+// Initialize only if key is available
+let stripe = null;
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+}
 
 // === OPENAI CONFIGURATION ===
-const { OpenAI } = require('openai');
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize only if key is available
+let openai = null;
+if (process.env.OPENAI_API_KEY) {
+  const { OpenAI } = require('openai');
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 // === AUTHENTICATION MIDDLEWARE ===
 const authenticateToken = (req, res, next) => {
@@ -183,6 +192,14 @@ app.post('/api/ai/query', authenticateToken, [
   try {
     const { message, context } = req.body;
 
+    // Check if OpenAI is configured
+    if (!openai) {
+      return res.status(503).json({ 
+        error: 'AI service not configured - missing OpenAI API key',
+        code: 'OPENAI_NOT_CONFIGURED'
+      });
+    }
+
     // Check if user has access to AI features
     if (req.user.subscription === 'free' && context?.premium) {
       return res.status(403).json({ 
@@ -229,6 +246,14 @@ app.post('/api/payments/create-checkout', stripeLimiter, authenticateToken, [
   body('priceId').isIn([process.env.STRIPE_MONTHLY_PRICE_ID, process.env.STRIPE_YEARLY_PRICE_ID])
 ], handleValidationErrors, async (req, res) => {
   try {
+    // Check if Stripe is configured
+    if (!stripe) {
+      return res.status(503).json({ 
+        error: 'Payment service not configured - missing Stripe API key',
+        code: 'STRIPE_NOT_CONFIGURED'
+      });
+    }
+
     const { priceId } = req.body;
 
     const session = await stripe.checkout.sessions.create({
@@ -259,6 +284,14 @@ app.post('/api/payments/stripe-webhook', express.raw({ type: 'application/json' 
   const sig = req.headers['stripe-signature'];
 
   try {
+    // Check if Stripe is configured
+    if (!stripe) {
+      return res.status(503).json({ 
+        error: 'Payment webhook not configured - missing Stripe API key',
+        code: 'STRIPE_NOT_CONFIGURED'
+      });
+    }
+
     const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
 
     switch (event.type) {
@@ -297,6 +330,67 @@ app.get('/api/payments/subscription-status', authenticateToken, async (req, res)
   } catch (error) {
     console.error('Subscription check error:', error);
     res.status(500).json({ error: 'Failed to check subscription' });
+  }
+});
+
+// === GITHUB WEBHOOK ===
+
+app.post('/api/github/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+  try {
+    const signature = req.headers['x-hub-signature-256'];
+    const payload = req.body;
+    
+    // Verify GitHub webhook signature (optional for public repos)
+    if (process.env.GITHUB_WEBHOOK_SECRET) {
+      const crypto = require('crypto');
+      const expectedSignature = 'sha256=' + crypto
+        .createHmac('sha256', process.env.GITHUB_WEBHOOK_SECRET)
+        .update(payload)
+        .digest('hex');
+        
+      if (signature !== expectedSignature) {
+        return res.status(401).json({ error: 'Invalid signature' });
+      }
+    }
+
+    const event = JSON.parse(payload.toString());
+    const eventType = req.headers['x-github-event'];
+
+    console.log(`🔔 GitHub event: ${eventType}`);
+
+    switch (eventType) {
+      case 'push':
+        if (event.ref === 'refs/heads/main') {
+          console.log('🚀 Push to main branch - triggering deployment');
+          // TODO: Add deployment logic here
+          // This could trigger rebuild, cache clear, etc.
+        }
+        break;
+        
+      case 'pull_request':
+        if (event.action === 'opened' || event.action === 'synchronize') {
+          console.log(`📝 PR ${event.action}: ${event.pull_request.title}`);
+          // TODO: Add PR checks, preview deployment, etc.
+        }
+        break;
+        
+      case 'issues':
+        console.log(`🐛 Issue ${event.action}: ${event.issue.title}`);
+        break;
+        
+      default:
+        console.log(`ℹ️ Unhandled GitHub event: ${eventType}`);
+    }
+
+    res.status(200).json({ 
+      message: 'Webhook received successfully',
+      event: eventType,
+      processed: true
+    });
+
+  } catch (error) {
+    console.error('GitHub webhook error:', error);
+    res.status(500).json({ error: 'Webhook processing failed' });
   }
 });
 
