@@ -2786,6 +2786,35 @@
         // === AI INTEGRATION ===
         async function getRealAIResponse(message) {
             try {
+                // Check if user is logged in
+                let token = localStorage.getItem('authToken');
+                
+                // If no token, auto-login with admin credentials
+                if (!token) {
+                    console.log('🔐 Brak tokenu - automatyczne logowanie...');
+                    try {
+                        const loginResponse = await apiCall(API_CONFIG.ENDPOINTS.LOGIN, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                email: 'admin@sezonoweDobro.pl',
+                                password: 'Wellness2024!F6C4094CC3919E7C@'
+                            })
+                        });
+                        
+                        // Store token
+                        localStorage.setItem('authToken', loginResponse.token);
+                        localStorage.setItem('userName', loginResponse.user.email);
+                        localStorage.setItem('userRole', loginResponse.user.role);
+                        
+                        console.log('✅ Automatyczne logowanie udane!');
+                        token = loginResponse.token;
+                        
+                    } catch (loginError) {
+                        console.error('❌ Automatyczne logowanie nieudane:', loginError);
+                        throw new Error('Nie można zalogować - sprawdź połączenie z API');
+                    }
+                }
+                
                 const response = await apiCall(API_CONFIG.ENDPOINTS.AI_QUERY, {
                     method: 'POST',
                     body: JSON.stringify({ 
@@ -2804,6 +2833,12 @@
                 if (error.message.includes('OPENAI_NOT_CONFIGURED')) {
                     console.log('🚧 OpenAI nie skonfigurowany - używam lokalnych odpowiedzi');
                     throw new Error('OpenAI API nie skonfigurowane');
+                } else if (error.message.includes('401') || error.message.includes('403')) {
+                    console.error('❌ Błąd autoryzacji - czyszczę token i próbuję ponownie');
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userRole');
+                    throw new Error('Błąd autoryzacji - spróbuj ponownie');
                 } else {
                     console.error('AI API Error:', error);
                     throw error;
