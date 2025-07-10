@@ -1905,7 +1905,7 @@
                         
                         <div style="text-align: center; margin-top: 20px;">
                             <p style="color: rgba(255,255,255,0.7); font-size: 12px;">
-                                👤 Demo: demo@example.com / demo123
+                                🔐 Tylko autoryzowani użytkownicy
                             </p>
                         </div>
                         
@@ -3332,41 +3332,9 @@
             } catch (error) {
                 console.error('Railway login failed:', error);
                 
-                // Fallback to demo credentials
-                if (email === 'admin@sezonoweDobro.pl' && password === 'admin123') {
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('userName', 'Administrator (Demo)');
-                    localStorage.setItem('userEmail', email);
-                    localStorage.setItem('userRole', 'admin');
-                    
-                    addSystemLog('SUCCESS', 'AUTH', 'Administrator zalogowany (tryb demo)', `Email: ${email}`);
-                    showNotification('Zalogowano jako Administrator (tryb demo)! 👑');
-                    
-                    setTimeout(() => {
-                        showMainApp();
-                        updateUserName('Administrator (Demo)');
-                        showAdminFeatures();
-                    }, 1000);
-                }
-                // Demo user fallback
-                else if (email === 'demo@sezonoweDobro.pl' && password === 'wellness123') {
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('userName', 'Demo User');
-                    localStorage.setItem('userEmail', email);
-                    localStorage.setItem('userRole', 'user');
-                    
-                    addSystemLog('SUCCESS', 'AUTH', 'Użytkownik demo zalogowany', `Email: ${email}`);
-                    showNotification('Pomyślnie zalogowano (tryb demo)! 🎉');
-                    
-                    setTimeout(() => {
-                        showMainApp();
-                        updateUserName('Demo User');
-                        hideAdminFeatures();
-                    }, 1000);
-                } else {
-                    addSystemLog('WARNING', 'AUTH', 'Nieudana próba logowania', `Email: ${email}, Error: ${error.message}`);
-                    showNotification('❌ Nieprawidłowe dane logowania!', 'error');
-                }
+                // Only Railway API authentication - no demo fallback
+                addSystemLog('WARNING', 'AUTH', 'Nieudana próba logowania', `Email: ${email}, Error: ${error.message}`);
+                showNotification('❌ Błąd połączenia z serwerem lub nieprawidłowe dane', 'error');
             } finally {
                 // Reset button
                 submitBtn.innerHTML = originalText;

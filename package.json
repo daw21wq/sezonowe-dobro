@@ -4,10 +4,12 @@
   "description": "Aplikacja wellness z tradycyjną medycyną chińską",
   "main": "api/index.js",
   "scripts": {
-    "start": "node api/index.js",
+    "start": "npx serve -s . -p $PORT",
+    "start:api": "node api/index.js",
     "dev": "nodemon api/index.js",
+    "dev:frontend": "npx serve -s . -p 3000",
     "test": "jest",
-    "build": "echo 'Build completed'",
+    "build": "echo 'Static build completed'",
     "deploy": "npm run build && npm start"
   },
   "keywords": [
@@ -20,6 +22,7 @@
   "author": "SezonoweDobro Team",
   "license": "MIT",
   "dependencies": {
+    "serve": "^14.2.1",
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "helmet": "^7.1.0",
