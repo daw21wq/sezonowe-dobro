@@ -2340,6 +2340,27 @@
                                 </button>
                             </div>
                         </div>
+
+                        <!-- Test Button -->
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
+                            <div style="color: white; font-size: 12px; margin-bottom: 8px;">Diagnostyka:</div>
+                            <button 
+                                onclick="testFullAIWorkflow()"
+                                style="
+                                    background: linear-gradient(135deg, #2196F3, #03A9F4);
+                                    border: none;
+                                    border-radius: 8px;
+                                    padding: 8px 16px;
+                                    color: white;
+                                    font-size: 12px;
+                                    cursor: pointer;
+                                    transition: all 0.3s ease;
+                                "
+                                title="Przetestuj połączenie z AI Railway"
+                            >
+                                🔧 Testuj połączenie AI
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2780,6 +2801,60 @@
             } catch (error) {
                 console.error('❌ API Railway błąd:', error);
                 showNotification('❌ Błąd połączenia z serwerem', 'error');
+                return false;
+            }
+        }
+
+        // === TEST FULL AI WORKFLOW ===
+        async function testFullAIWorkflow() {
+            try {
+                // Test 1: Health check
+                console.log('🔍 Test 1: Health check...');
+                const healthResponse = await apiCall(API_CONFIG.ENDPOINTS.HEALTH);
+                console.log('✅ Health response:', healthResponse);
+                
+                // Test 2: Login
+                console.log('🔍 Test 2: Login test...');
+                const loginResponse = await apiCall(API_CONFIG.ENDPOINTS.LOGIN, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email: 'admin@sezonoweDobro.pl',
+                        password: 'Wellness2024!F6C4094CC3919E7C@'
+                    })
+                });
+                console.log('✅ Login response:', loginResponse);
+                
+                // Test 3: Store token temporarily
+                const originalToken = localStorage.getItem('authToken');
+                localStorage.setItem('authToken', loginResponse.token);
+                
+                // Test 4: AI Query
+                console.log('🔍 Test 3: AI Query...');
+                const aiResponse = await apiCall(API_CONFIG.ENDPOINTS.AI_QUERY, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        message: 'Pokaż mi przepisy na lato',
+                        context: {
+                            season: 'lato',
+                            userRole: 'admin'
+                        }
+                    })
+                });
+                console.log('✅ AI Response:', aiResponse);
+                
+                // Restore original token
+                if (originalToken) {
+                    localStorage.setItem('authToken', originalToken);
+                } else {
+                    localStorage.removeItem('authToken');
+                }
+                
+                showNotification('✅ Wszystkie testy przeszły! AI powinno teraz działać.');
+                return true;
+                
+            } catch (error) {
+                console.error('❌ Test error:', error);
+                showNotification('❌ Test failed: ' + error.message, 'error');
                 return false;
             }
         }
