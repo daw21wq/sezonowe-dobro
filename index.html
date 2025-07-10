@@ -2447,6 +2447,10 @@
                     </div>
                     <div class="card-content">
                         <div class="feature-grid">
+                            <div class="feature-item" onclick="testAPIConnection()">
+                                <i class="fas fa-server feature-icon" style="color: #4CAF50;"></i>
+                                <div class="feature-text">Test Railway</div>
+                            </div>
                             <div class="feature-item" onclick="performBackup()">
                                 <i class="fas fa-database feature-icon"></i>
                                 <div class="feature-text">Backup</div>
@@ -2677,6 +2681,109 @@
     </div>
 
     <script>
+        // === API CONFIGURATION ===
+        const API_CONFIG = {
+            BASE_URL: 'https://sezonowe-dobro-production.up.railway.app/api',
+            ENDPOINTS: {
+                HEALTH: '/health',
+                LOGIN: '/auth/login',
+                REGISTER: '/auth/register',
+                AI_QUERY: '/ai/query',
+                STRIPE_CHECKOUT: '/payments/create-checkout',
+                SUBSCRIPTION_STATUS: '/payments/subscription-status'
+            }
+        };
+
+        // === API HELPER FUNCTIONS ===
+        async function apiCall(endpoint, options = {}) {
+            const url = API_CONFIG.BASE_URL + endpoint;
+            const token = localStorage.getItem('authToken');
+            
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token && { 'Authorization': `Bearer ${token}` }),
+                    ...options.headers
+                },
+                ...options
+            };
+            
+            try {
+                const response = await fetch(url, config);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || `HTTP ${response.status}`);
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('API Call failed:', error);
+                throw error;
+            }
+        }
+
+        // === AUTHENTICATION FUNCTIONS ===
+        async function realLogin(email, password) {
+            try {
+                const response = await apiCall(API_CONFIG.ENDPOINTS.LOGIN, {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password })
+                });
+                
+                // Store token and user data
+                localStorage.setItem('authToken', response.token);
+                localStorage.setItem('userName', response.user.email);
+                localStorage.setItem('userRole', response.user.role);
+                
+                return response;
+            } catch (error) {
+                throw new Error('Logowanie nie powiodło się: ' + error.message);
+            }
+        }
+
+        // === AI INTEGRATION ===
+        async function getRealAIResponse(message) {
+            try {
+                const response = await apiCall(API_CONFIG.ENDPOINTS.AI_QUERY, {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        message: message,
+                        context: {
+                            season: getCurrentSeason(),
+                            userRole: localStorage.getItem('userRole') || 'user'
+                        }
+                    })
+                });
+                
+                return response.response || 'Przepraszam, nie mogę teraz odpowiedzieć.';
+                
+            } catch (error) {
+                // If OpenAI not configured, inform user
+                if (error.message.includes('OPENAI_NOT_CONFIGURED')) {
+                    console.log('🚧 OpenAI nie skonfigurowany - używam lokalnych odpowiedzi');
+                    throw new Error('OpenAI API nie skonfigurowane');
+                } else {
+                    console.error('AI API Error:', error);
+                    throw error;
+                }
+            }
+        }
+
+        // === TEST API CONNECTION ===
+        async function testAPIConnection() {
+            try {
+                const response = await apiCall(API_CONFIG.ENDPOINTS.HEALTH);
+                console.log('✅ API Railway połączone:', response);
+                showNotification('✅ Połączono z serwerem Railway!');
+                return true;
+            } catch (error) {
+                console.error('❌ API Railway błąd:', error);
+                showNotification('❌ Błąd połączenia z serwerem', 'error');
+                return false;
+            }
+        }
+
         // Tab Switching
         function switchTab(evt, tabName) {
             var i, tabcontent, navtabs;
@@ -3189,45 +3296,81 @@
             }
         }
 
-        function login(event) {
+        async function login(event) {
             event.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            // Admin credentials check
-            if (email === 'admin@sezonoweDobro.pl' && password === 'admin123') {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userName', 'Administrator');
-                localStorage.setItem('userEmail', email);
-                localStorage.setItem('userRole', 'admin');
+            // Show loading
+            const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logowanie...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Try real API login first
+                const response = await realLogin(email, password);
                 
-                addSystemLog('SUCCESS', 'AUTH', 'Administrator zalogowany pomyślnie', `Email: ${email}`);
-                showNotification('Zalogowano jako Administrator! 👑');
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userName', response.user.email);
+                localStorage.setItem('userEmail', response.user.email);
+                localStorage.setItem('userRole', response.user.role);
+                
+                addSystemLog('SUCCESS', 'AUTH', 'Zalogowano przez Railway API', `Email: ${email}, Role: ${response.user.role}`);
+                showNotification(`✅ Zalogowano przez Railway! ${response.user.role === 'admin' ? '👑' : '🎉'}`);
                 
                 setTimeout(() => {
                     showMainApp();
-                    updateUserName('Administrator');
-                    showAdminFeatures();
+                    updateUserName(response.user.email);
+                    if (response.user.role === 'admin') {
+                        showAdminFeatures();
+                    } else {
+                        hideAdminFeatures();
+                    }
                 }, 1000);
-            }
-            // Demo credentials check
-            else if (email === 'demo@example.com' && password === 'demo123') {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userName', 'Demo User');
-                localStorage.setItem('userEmail', email);
-                localStorage.setItem('userRole', 'user');
                 
-                addSystemLog('SUCCESS', 'AUTH', 'Użytkownik demo zalogowany pomyślnie', `Email: ${email}`);
-                showNotification('Pomyślnie zalogowano! 🎉');
+            } catch (error) {
+                console.error('Railway login failed:', error);
                 
-                setTimeout(() => {
-                    showMainApp();
-                    updateUserName('Demo User');
-                    hideAdminFeatures();
-                }, 1000);
-            } else {
-                addSystemLog('WARNING', 'AUTH', 'Nieudana próba logowania', `Email: ${email}`);
-                showNotification('Nieprawidłowe dane logowania!');
+                // Fallback to demo credentials
+                if (email === 'admin@sezonoweDobro.pl' && password === 'admin123') {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userName', 'Administrator (Demo)');
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('userRole', 'admin');
+                    
+                    addSystemLog('SUCCESS', 'AUTH', 'Administrator zalogowany (tryb demo)', `Email: ${email}`);
+                    showNotification('Zalogowano jako Administrator (tryb demo)! 👑');
+                    
+                    setTimeout(() => {
+                        showMainApp();
+                        updateUserName('Administrator (Demo)');
+                        showAdminFeatures();
+                    }, 1000);
+                }
+                // Demo user fallback
+                else if (email === 'demo@sezonoweDobro.pl' && password === 'wellness123') {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userName', 'Demo User');
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('userRole', 'user');
+                    
+                    addSystemLog('SUCCESS', 'AUTH', 'Użytkownik demo zalogowany', `Email: ${email}`);
+                    showNotification('Pomyślnie zalogowano (tryb demo)! 🎉');
+                    
+                    setTimeout(() => {
+                        showMainApp();
+                        updateUserName('Demo User');
+                        hideAdminFeatures();
+                    }, 1000);
+                } else {
+                    addSystemLog('WARNING', 'AUTH', 'Nieudana próba logowania', `Email: ${email}, Error: ${error.message}`);
+                    showNotification('❌ Nieprawidłowe dane logowania!', 'error');
+                }
+            } finally {
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             }
         }
 
@@ -8076,15 +8219,22 @@
             // Show typing indicator
             showTypingIndicator();
             
-            // Process AI response
-            setTimeout(() => {
+            // Process AI response with Railway API
+            setTimeout(async () => {
                 hideTypingIndicator();
-                const response = generateAIResponse(message);
-                addMessageToChat(response, 'ai');
+                try {
+                    const response = await getRealAIResponse(message);
+                    addMessageToChat(response, 'ai');
+                } catch (error) {
+                    console.error('AI Error:', error);
+                    // Fallback to local response if API fails
+                    const fallbackResponse = generateAIResponse(message);
+                    addMessageToChat(fallbackResponse + '<br><br><small>ℹ️ Odpowiedź z lokalnej bazy (API niedostępne)</small>', 'ai');
+                }
                 
                 // Update usage display if premium modal is open
                 updateAIUsageDisplay();
-            }, 1500 + Math.random() * 1000);
+            }, 800);
         }
 
         function addMessageToChat(message, sender) {
@@ -8789,8 +8939,13 @@
             subscribeBtn.disabled = true;
             
             try {
-                // Simulate payment processing (replace with real Stripe implementation)
-                await simulateStripePayment();
+                // Real Stripe payment integration with Railway API
+                const paymentResult = await realStripePayment();
+                
+                // If redirected to Stripe, stop here
+                if (paymentResult.status === 'redirected') {
+                    return;
+                }
                 
                 // Success - activate premium
                 localStorage.setItem('premiumStatus', 'active');
@@ -8822,21 +8977,43 @@
             }
         }
 
-        async function simulateStripePayment() {
-            // Simulate network delay and payment processing
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            // Simulate 95% success rate
-            if (Math.random() < 0.05) {
-                throw new Error('Karta została odrzucona');
+        async function realStripePayment() {
+            try {
+                // Call Railway API to create Stripe checkout session
+                const response = await apiCall(API_CONFIG.ENDPOINTS.STRIPE_CHECKOUT, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        priceId: 'price_monthly' // This would be your real Stripe price ID
+                    })
+                });
+                
+                // Redirect to Stripe checkout
+                if (response.url) {
+                    window.location.href = response.url;
+                    return { status: 'redirected', url: response.url };
+                } else {
+                    throw new Error('Nie otrzymano URL płatności');
+                }
+                
+            } catch (error) {
+                // If Stripe not configured, fall back to demo mode
+                if (error.message.includes('STRIPE_NOT_CONFIGURED')) {
+                    console.log('🚧 Stripe nie skonfigurowany - tryb demo');
+                    showNotification('🚧 Tryb demo - Stripe nie skonfigurowany');
+                    
+                    // Simulate successful payment in demo mode
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    return {
+                        id: 'demo_' + Math.random().toString(36).substr(2, 9),
+                        status: 'succeeded',
+                        amount: 2999,
+                        currency: 'pln',
+                        demo: true
+                    };
+                } else {
+                    throw error;
+                }
             }
-            
-            return {
-                id: 'pi_' + Math.random().toString(36).substr(2, 9),
-                status: 'succeeded',
-                amount: 2999, // 29.99 PLN in grosze
-                currency: 'pln'
-            };
         }
 
         function showPremiumSuccessModal() {
@@ -8969,8 +9146,32 @@
         `;
         document.head.appendChild(premiumStyle);
 
-        // Initialize premium status on page load
-        setTimeout(checkPremiumStatus, 500);
+        // === RAILWAY INTEGRATION INITIALIZATION ===
+        async function initializeRailwayIntegration() {
+            console.log('🚀 Inicjalizacja integracji Railway...');
+            
+            // Test API connection
+            const apiConnected = await testAPIConnection();
+            
+            // Show integration status
+            if (apiConnected) {
+                showNotification('🎉 Railway API połączone! Wszystkie funkcje dostępne.', 'success');
+                console.log('✅ Integracja Railway: AKTYWNA');
+            } else {
+                showNotification('⚠️ Railway API niedostępne - tryb demo aktywny', 'warning');
+                console.log('⚠️ Integracja Railway: TRYB DEMO');
+            }
+            
+            // Log integration status
+            addSystemLog('INFO', 'SYSTEM', 'Inicjalizacja aplikacji', 
+                `Railway API: ${apiConnected ? 'Połączone' : 'Tryb demo'}`);
+        }
+
+        // Initialize premium status and Railway integration on page load
+        setTimeout(() => {
+            checkPremiumStatus();
+            initializeRailwayIntegration();
+        }, 500);
     </script>
 </body>
 </html> 
