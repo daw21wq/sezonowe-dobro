@@ -4,8 +4,8 @@
   "description": "Aplikacja wellness z tradycyjną medycyną chińską",
   "main": "api/index.js",
   "scripts": {
-    "start": "npx serve -s . -p $PORT",
-    "start:api": "node api/index.js",
+    "start": "node api/index.js",
+    "start:static": "npx serve -s . -p $PORT",
     "dev": "nodemon api/index.js",
     "dev:frontend": "npx serve -s . -p 3000",
     "test": "jest",
